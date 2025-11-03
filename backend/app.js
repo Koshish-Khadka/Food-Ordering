@@ -1,10 +1,12 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./utils/Database.js";
+import userRoutes from "./routes/userRoute.js";
+
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
 
 dotenv.config({ quiet: true });
 
@@ -15,11 +17,11 @@ app.use(express.urlencoded({ extended: true }));
 // api create
 
 // api.use("/api/users", userRoutes);
+app.use("/api/users", userRoutes);
 
-
-app.get("/", (req, res) => {
-  res.send("Hello Koshish don !");
-});
+// app.get("/", (req, res) => {
+//   res.send("Hello Koshish don !");
+// });
 
 // Server listening
 app.listen(PORT, () => {
