@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema({
     enum: ["customer", "admin"],
     default: "customer",
   },
+  otp: { type: Number, default: null },
 });
 
 const User = mongoose.model("User", userSchema);
