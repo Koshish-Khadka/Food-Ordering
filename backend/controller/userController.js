@@ -70,31 +70,6 @@ export const registerUser = async (req, res) => {
   }
 };
 
-// export const forgotPassword = async (req, res) => {
-//   const { email } = req.body;
-//   if (!email) {
-//     return res.status(400).json({ message: "Email is required" });
-//   }
-//   // check email
-//   const checkUser = await User.find({ email: email });
-//   if (checkUser.length === 0) {
-//     return res.status(404).json({ message: "Email not found" });
-//   }
-//   //   send otp to email
-//   const otp = Math.floor(1000 + Math.random() * 9000);
-
-//   // Save the send otp to the otp column on database
-//   checkUser.otp = otp;
-//   await User.save();
-
-//   await sendMail({
-//     to: "koshishkhadka364@gmail.com",
-//     subject: "Password Recovery OTP",
-//     text: `Your OTP for password recovery is ${otp}. It is valid for 10 minutes.`,
-//   });
-
-//   res.status(200).json({ message: "OTP sent to email", otp });
-// };
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -127,5 +102,69 @@ export const forgotPassword = async (req, res) => {
   } catch (error) {
     console.error("Error in forgotPassword:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const VerifyOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // find user by email
+    const users = await User.find({ email: email });
+
+    if (users.length === 0) {
+      return res.status(404).json({ message: "Email not registered" });
+    }
+
+    // access the first user in the array
+    const currentUser = users[0];
+
+    // compare otp
+    if (currentUser.otp !== otp) {
+      res.status(400).json({ message: "Invalid OTP" });
+    } else {
+      res.status(200).json({ message: "OTP matched " });
+      // After otp is matcted dispatch the otp
+      currentUser.otp = null;
+      currentUser.isOtpVerified = true;
+      await currentUser.save();
+    }
+  } catch (error) {
+    console.error("Failed to verify OTP", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const changePassword = async (req, res) => {
+  try {
+    const { email, password, confirmpassword } = req.body;
+    console.log("body", req.body);
+    if (!email || !password || !confirmpassword) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+    if (password !== confirmpassword) {
+      return res.status(400).json({ message: "Password donot match" });
+    }
+    const userExists = await User.find({ email: email });
+    if (userExists.length === 0) {
+      return res.status(404).json({ message: "Email not registered" });
+    }
+    if (userExists[0].isOtpVerified !== true) {
+      return res
+        .status(403)
+        .json({ message: "You cannot perform this action" });
+    }
+
+    const currentUser = userExists[0];
+    currentUser.password = bcrypt.hashSync(password, 10);
+    currentUser.isOtpVerified = false;
+    await currentUser.save();
+    return res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    console.log("Failed to change Password", error);
   }
 };
