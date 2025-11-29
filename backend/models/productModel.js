@@ -8,7 +8,6 @@ const productSchema = new mongoose.Schema(
     productDescription: {
       type: String,
       required: [true, "productDescription must be provided"],
-  
     },
     productStockQty: {
       type: Number,
@@ -21,6 +20,9 @@ const productSchema = new mongoose.Schema(
     productStatus: {
       type: String,
       enum: ["available", "unavailable"],
+    },
+    productImage: {
+      type: String,
     },
   },
   { timestamps: true }
