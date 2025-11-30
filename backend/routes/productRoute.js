@@ -9,6 +9,7 @@ import {
 import { isAuthenticated } from "../middleware/isAuthenticated.js";
 import { isValidRole } from "../middleware/isValidRole.js";
 import { upload } from "../middleware/multer.js";
+import { catchAsync } from "../services/catchAsync.js";
 
 const router = express.Router();
 
@@ -19,9 +20,9 @@ router.post(
   upload.single("productImage"),
   createProduct
 );
-router.get("/getAllProducts", getAllProducts);
-router.get("/:productID", getProductbyID);
-router.patch("/:productID", updateProduct);
-router.delete("/:productID", deleteProduct);
+router.get("/getAllProducts", catchAsync(getAllProducts));
+router.get("/:productID", catchAsync(getProductbyID));
+router.patch("/:productID", catchAsync(updateProduct));
+router.delete("/:productID", catchAsync(deleteProduct));
 
 export default router;
