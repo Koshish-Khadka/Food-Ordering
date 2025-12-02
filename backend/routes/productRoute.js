@@ -22,7 +22,11 @@ router.post(
 );
 router.get("/getAllProducts", catchAsync(getAllProducts));
 router.get("/:productID", catchAsync(getProductbyID));
-router.patch("/:productID", catchAsync(updateProduct));
+router.patch(
+  "/:productID",
+  upload.single("productImage"),
+  catchAsync(updateProduct)
+);
 router.delete("/:productID", catchAsync(deleteProduct));
 
 export default router;
