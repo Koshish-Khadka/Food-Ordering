@@ -5,7 +5,7 @@ import {
   getAllProducts,
   getProductbyID,
   updateProduct,
-} from "../controller/productController.js";
+} from "../controller/admin/product/productController.js";
 import { isAuthenticated } from "../middleware/isAuthenticated.js";
 import { isValidRole } from "../middleware/isValidRole.js";
 import { upload } from "../middleware/multer.js";
@@ -18,15 +18,27 @@ router.post(
   isAuthenticated,
   isValidRole("admin"),
   upload.single("productImage"),
-  createProduct
+  catchAsync(createProduct)
 );
 router.get("/getAllProducts", catchAsync(getAllProducts));
-router.get("/:productID", catchAsync(getProductbyID));
+router.get(
+  "/:productID",
+  isAuthenticated,
+  isValidRole("admin"),
+  catchAsync(getProductbyID)
+);
 router.patch(
   "/:productID",
+  isAuthenticated,
+  isValidRole("admin"),
   upload.single("productImage"),
   catchAsync(updateProduct)
 );
-router.delete("/:productID", catchAsync(deleteProduct));
+router.delete(
+  "/:productID",
+  isAuthenticated,
+  isValidRole("admin"),
+  catchAsync(deleteProduct)
+);
 
 export default router;

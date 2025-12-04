@@ -1,4 +1,4 @@
-import Product from "../models/productModel.js";
+import Product from "../../../models/productModel.js";
 import fs from "fs";
 
 export const createProduct = async (req, res) => {
@@ -142,8 +142,6 @@ export const updateProduct = async (req, res) => {
   );
   res.status(200).json({ message: "Product updated successfully" }, datas);
 };
-
-import fs from "fs/promises";
 
 export const deleteProduct = async (req, res) => {
   try {

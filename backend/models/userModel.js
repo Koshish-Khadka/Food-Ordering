@@ -17,16 +17,23 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, "Please enter your password"],
+      // select: false, //make this data hidden when user data is fetched
     },
     role: {
       type: String,
       enum: ["customer", "admin"],
       default: "customer",
+      // select: false,
     },
-    otp: { type: Number },
+    otp: {
+      type: Number,
+
+      // select: false
+    },
     isOtpVerified: {
       type: Boolean,
       default: false,
+      // select: false,
     },
   },
   { timestamps: true }

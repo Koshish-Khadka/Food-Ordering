@@ -5,7 +5,7 @@ import {
   loginUser,
   registerUser,
   VerifyOtp,
-} from "../controller/usercontroller.js";
+} from "../controller/authcontroller.js";
 import { catchAsync } from "../services/catchAsync.js";
 
 const router = express.Router();
