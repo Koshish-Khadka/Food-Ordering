@@ -2,14 +2,13 @@ import express from "express";
 import {
   createProduct,
   deleteProduct,
-  getAllProducts,
-  getProductbyID,
   updateProduct,
-} from "../controller/admin/product/productController.js";
-import { isAuthenticated } from "../middleware/isAuthenticated.js";
-import { isValidRole } from "../middleware/isValidRole.js";
-import { upload } from "../middleware/multer.js";
-import { catchAsync } from "../services/catchAsync.js";
+} from "../../controller/admin/product/productController.js";
+import { isAuthenticated } from "../../middleware/isAuthenticated.js";
+import { isValidRole } from "../../middleware/isValidRole.js";
+import { upload } from "../../middleware/multer.js";
+import { catchAsync } from "../../services/catchAsync.js";
+import { getAllProducts, getProductbyID } from "../../controller/global/globalController.js";
 
 const router = express.Router();
 

@@ -1,10 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./utils/Database.js";
-import authRoute from "./routes/authRoute.js";
-import productRoute from "./routes/productRoute.js";
-import adminUsersRoute from "./routes/adminUsersRoute.js";
-import userReviewRoute from "./routes/userReviewRoute.js";
+import authRoute from "./routes/auth/authRoute.js";
+import productRoute from "./routes/admin/productRoute.js";
+import adminUsersRoute from "./routes/admin/adminUsersRoute.js";
+import userReviewRoute from "./routes/user/userReviewRoute.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 

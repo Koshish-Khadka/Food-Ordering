@@ -1,7 +1,7 @@
-import User from "../models/userModel.js";
+import User from "../../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { sendMail } from "../services/sendMail.js";
+import { sendMail } from "../../services/sendMail.js";
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;

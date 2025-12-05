@@ -28,71 +28,8 @@ export const createProduct = async (req, res) => {
     .json({ message: "product created successfully", Products: product });
 };
 
-export const getAllProducts = async (req, res) => {
-  // res.status(200).json({ message: "I am get all products" });
 
-  const products = await Product.find();
-  if (!products) {
-    return res.status(404).json({ message: "Products not found" });
-  }
-  res.status(200).json({ products });
-};
 
-export const getProductbyID = async (req, res) => {
-  const productID = req.params.productID;
-  const product = await Product.findById(productID);
-  if (!product) {
-    return res.status(404).json({ message: "product not found" });
-  }
-  res.status(200).json({ message: "product found", product });
-};
-
-// export const updateProduct = async (req, res) => {
-//   const { name, description, qty, price, status } = req.body;
-//   const productID = req.params.productID;
-
-//   // find the old product data
-//   const oldData = await Product.findById(productID);
-//   if (!oldData) {
-//     return res.status(404).json({ message: "No data found with that id" });
-//   }
-//   const oldDataImage = oldData.productImage;
-//   const lengthtocut = "http://localhost:3000/".length;
-//   const finalImage = oldDataImage.slice(lengthtocut);
-
-//   // Make changes to the file
-//   if (req.file && req.file.filename) {
-//     fs.unlink(`./uploads/${finalImage}`);
-//   }
-
-//   // Check if product exists
-//   const product = await Product.findById(productID);
-//   if (!product) {
-//     return res.status(404).json({ message: "Product not found" });
-//   }
-
-//   // Update product
-//   const updatedProduct = await Product.findByIdAndUpdate(
-//     productID,
-//     {
-//       productName: name,
-//       productDescription: description,
-//       productStockQty: qty,
-//       productPrice: price,
-//       productStatus: status,
-//       productImage:
-//         req.file && req.file.filename
-//           ? `http://localhost:3000/` + filepath
-//           : oldDataImage,
-//     },
-//     { new: true } // return the updated document
-//   );
-
-//   res.status(200).json({
-//     message: "Product updated successfully",
-//     product: updatedProduct,
-//   });
-// };
 export const updateProduct = async (req, res) => {
   const productID = req.params.productID;
   const { name, description, qty, price, status } = req.body;

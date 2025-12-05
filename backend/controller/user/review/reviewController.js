@@ -1,5 +1,5 @@
-import Product from "../../models/productModel.js";
-import Review from "../../models/reviewModel.js";
+import Product from "../../../models/productModel.js";
+import Review from "../../../models/reviewModel.js";
 
 export const createReview = async (req, res) => {
   const userId = req.user.id;
@@ -28,27 +28,17 @@ export const createReview = async (req, res) => {
   res.status(200).json({ message: "Review Created Successfully" });
 };
 
-export const getProductReview = async (req, res) => {
-  const productId = req.params.id;
-  console.log(productId);
-  if (!productId) {
-    return res.status(400).json({
-      message: "Product Id must be provided",
-    });
-  }
-  //   Check if that product exist or not
-  const productExists = await Product.findById(productId);
-  if (!productExists) {
-    return res
+export const getMyReviews = async (req, res) => {
+  //aafu la garako aailya samma ko review haru sabbai dekhauna lai
+  const userId = req.user.id;
+  const reviews = await Review.findById({ userId });
+  if (reviews.length === 0) {
+    res
       .status(404)
-      .json({ message: "Product with that ID does not exist" });
+      .json({ message: "You haven't given any review yet", reviews: [] });
+  } else {
+    res.status(200).json({ message: "Review fetched successfully", reviews });
   }
-  //   Get review
-  const reviews = await Review.find({ productId })
-    .populate("userId")
-    .populate("productId");
-
-  res.status(200).json({ message: "Review fetched successfully", reviews });
 };
 
 export const deleteReview = async (req, res) => {
@@ -58,6 +48,16 @@ export const deleteReview = async (req, res) => {
       message: "reviewId  must be provided",
     });
   }
+  // Check the review if same created user is deleting it or not
+  const userId = req.user.id;
+  const Findreview = await Review.findById(reviewId);
+  const ownerIdofReview = Findreview.userId;
+  if (ownerIdofReview !== userId) {
+    return res
+      .status(400)
+      .json({ message: "You dont have permission to delete this " });
+  }
+
   //   Check if that review exist or not
   const reviewExists = await Review.findById(reviewId);
   if (!reviewExists) {
