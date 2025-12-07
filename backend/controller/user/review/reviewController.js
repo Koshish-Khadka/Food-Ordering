@@ -37,7 +37,7 @@ export const getMyReviews = async (req, res) => {
       .status(404)
       .json({ message: "You haven't given any review yet", reviews: [] });
   } else {
-    res.status(200).json({ message: "Review fetched successfully", reviews });
+    res.status(200).json({ message: "Review fetched successfully", data:reviews });
   }
 };
 

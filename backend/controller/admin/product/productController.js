@@ -28,8 +28,6 @@ export const createProduct = async (req, res) => {
     .json({ message: "product created successfully", Products: product });
 };
 
-
-
 export const updateProduct = async (req, res) => {
   const productID = req.params.productID;
   const { name, description, qty, price, status } = req.body;
@@ -77,7 +75,9 @@ export const updateProduct = async (req, res) => {
       new: true,
     }
   );
-  res.status(200).json({ message: "Product updated successfully" }, datas);
+  res
+    .status(200)
+    .json({ message: "Product updated successfully", data: datas });
 };
 
 export const deleteProduct = async (req, res) => {

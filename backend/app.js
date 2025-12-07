@@ -17,10 +17,10 @@ app.use(express.static("uploads")); //make uploads folder excessable
 // api create
 
 // api.use("/api/users", userRoutes);
-app.use("/api/auth", authRoute);
-app.use("/api/product", productRoute);
-app.use("/api/admin", adminUsersRoute);
-app.use("/api/users", userReviewRoute);
+app.use("/api", authRoute);
+app.use("/api", productRoute);
+app.use("/api", adminUsersRoute);
+app.use("/api", userReviewRoute);
 
 // app.get("/", (req, res) => {
 //   res.send("Hello Koshish don !");
