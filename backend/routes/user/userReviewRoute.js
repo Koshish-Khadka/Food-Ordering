@@ -9,10 +9,10 @@ import { isAuthenticated } from "../../middleware/isAuthenticated.js";
 
 const router = express.Router();
 
-router.get("/reviews", isAuthenticated, catchAsync(getMyReviews));
+router.get("/", isAuthenticated, catchAsync(getMyReviews));
 // Chaning both cause they have same endpoint
 router
-  .route("/reviews/:id")
+  .route("/:id")
   .delete(isAuthenticated, catchAsync(deleteReview))
   .post(isAuthenticated, catchAsync(createReview));
 
