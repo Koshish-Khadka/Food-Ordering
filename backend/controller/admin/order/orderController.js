@@ -10,5 +10,51 @@ export const getAllOrders = async (req, res) => {
   }
   res
     .status(200)
-    .json({ message: "Successfully fetched all orders", data: allOrders });
+    .json({ message: "Successfully fetched all ordersp", data: allOrders });
+};
+
+export const getSingleOrder = async (req, res) => {
+  const orderId = req.params.id;
+  if (!orderId) {
+    return res.status(400).json({ message: "orderId is required" });
+  }
+  const findOrder = await Order.findById(orderId).populate({
+    path: "items.product",
+  });
+  if (!findOrder) {
+    return res.status(404).json({ message: "Order not found" });
+  }
+  res.status(200).json({ message: "Order found", data: findOrder });
+};
+
+export const deleteOrderById = async (req, res) => {
+  const orderId = req.params.id;
+  if (!orderId) {
+    return res.status(400).json({ message: "Order Id is required" });
+  }
+  const findOrder = await Order.findById(orderId);
+  if (!findOrder) {
+    return res.status(404).json({ message: "Order not found" });
+  }
+  await Order.findByIdAndDelete(orderId);
+  res.status(200).json({ message: "Order deleted Successfully" });
+};
+
+export const updateOrderStatus = async (req, res) => {
+  const { status } = req.body;
+  const orderId = req.params.id;
+
+  if (!orderId || !status) {
+    return res.status(400).json({ message: "Order id and status is required" });
+  }
+
+  const findOrder = await Order.findById(orderId);
+  if (!findOrder) {
+    return res.status(404).json({ message: "Order not found" });
+  }
+  findOrder.status = status;
+  if(status === "preparation"){
+    // decrease the quantity of the product as per order quantity
+    const 
+  }
 };
