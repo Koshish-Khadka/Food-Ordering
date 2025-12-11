@@ -53,8 +53,8 @@ export const updateOrderStatus = async (req, res) => {
     return res.status(404).json({ message: "Order not found" });
   }
   findOrder.status = status;
-  if(status === "preparation"){
-    // decrease the quantity of the product as per order quantity
-    const 
-  }
+  // if(status === "preparation"){
+  //   // decrease the quantity of the product as per order quantity
+  //   const 
+  // }
 };
