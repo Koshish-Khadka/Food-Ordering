@@ -41,20 +41,48 @@ export const deleteOrderById = async (req, res) => {
 };
 
 export const updateOrderStatus = async (req, res) => {
-  const { status } = req.body;
-  const orderId = req.params.id;
+  // const { status } = req.body;
+  // const orderId = req.params.id;
 
-  if (!orderId || !status) {
-    return res.status(400).json({ message: "Order id and status is required" });
-  }
-
-  const findOrder = await Order.findById(orderId);
-  if (!findOrder) {
-    return res.status(404).json({ message: "Order not found" });
-  }
-  findOrder.status = status;
-  // if(status === "preparation"){
-  //   // decrease the quantity of the product as per order quantity
-  //   const 
+  // if (!orderId || !status) {
+  //   return res.status(400).json({ message: "Order id and status is required" });
   // }
+
+  // const findOrder = await Order.findById(orderId);
+  // if (!findOrder) {
+  //   return res.status(404).json({ message: "Order not found" });
+  // }
+  // findOrder.status = status;
+  // // if(status === "preparation"){
+  // //   // decrease the quantity of the product as per order quantity
+  // //   const
+  // // }
+  const orderId = req.params.id;
+  const { orderStatus } = req.body;
+  if (
+    !orderStatus ||
+    !["pending", "delivered", "cancelled", "ontheway", "preparation"].includes(
+      orderStatus.toLowerCase()
+    )
+  ) {
+    return res
+      .status(400)
+      .json({ message: "Order status is invalid or should be provided" });
+  }
+  // find the order
+  const order = await Order.findById(orderId);
+  if (!order) {
+    return res.status(404).json({ message: "Order with that id not found" });
+  }
+
+  const updatedOrder = await Order.findByIdAndUpdate(
+    orderId,
+    {
+      orderStatus,
+    },
+    { new: true }
+  );
+  res
+    .status(200)
+    .json({ message: "Order Updated Successfully", data: updatedOrder });
 };
