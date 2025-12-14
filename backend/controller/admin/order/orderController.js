@@ -41,22 +41,6 @@ export const deleteOrderById = async (req, res) => {
 };
 
 export const updateOrderStatus = async (req, res) => {
-  // const { status } = req.body;
-  // const orderId = req.params.id;
-
-  // if (!orderId || !status) {
-  //   return res.status(400).json({ message: "Order id and status is required" });
-  // }
-
-  // const findOrder = await Order.findById(orderId);
-  // if (!findOrder) {
-  //   return res.status(404).json({ message: "Order not found" });
-  // }
-  // findOrder.status = status;
-  // // if(status === "preparation"){
-  // //   // decrease the quantity of the product as per order quantity
-  // //   const
-  // // }
   const orderId = req.params.id;
   const { orderStatus } = req.body;
   if (
