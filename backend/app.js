@@ -9,6 +9,7 @@ import profileRoute from "./routes/user/profileRoute.js";
 import cartRoute from "./routes/user/cartRoute.js";
 import orderRoute from "./routes/user/orderRoute.js";
 import adminOrderRoute from "./routes/admin/adminOrderRoute.js";
+import paymentRoute from "./routes/user/paymentRoute.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,6 +31,8 @@ app.use("/api/profile", profileRoute);
 app.use("/api/cart", cartRoute);
 app.use("/api/order", orderRoute);
 app.use("/api/admin", adminOrderRoute);
+app.use("/api/admin", adminOrderRoute);
+app.use("/api/payment", paymentRoute);
 
 // app.get("/", (req, res) => {
 //   res.send("Hello Koshish don !");

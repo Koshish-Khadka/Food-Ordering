@@ -29,6 +29,7 @@ const orderSchema = new mongoose.Schema(
       default: "pending",
     },
     paymentDetails: {
+      pidx: { type: String },
       method: { type: String, enum: ["COD", "Khalti"] },
       status: { type: String, enum: ["paid", "unpaid", "pending"] },
     },
