@@ -10,6 +10,8 @@ import cartRoute from "./routes/user/cartRoute.js";
 import orderRoute from "./routes/user/orderRoute.js";
 import adminOrderRoute from "./routes/admin/adminOrderRoute.js";
 import paymentRoute from "./routes/user/paymentRoute.js";
+import { Server } from "socket.io";
+import User from "./models/userModel.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -34,12 +36,27 @@ app.use("/api/admin", adminOrderRoute);
 app.use("/api/admin", adminOrderRoute);
 app.use("/api/payment", paymentRoute);
 
+app.get("/", (req, res) => {
+  res.status(200).json({ message: " Backend is running" });
+});
+
 // app.get("/", (req, res) => {
 //   res.send("Hello Koshish don !");
 // });
 
 // Server listening
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   connectDB();
   console.log(`Server is running at port http://localhost:${PORT}`);
+});
+
+// Make the server take websocket connection
+const io = new Server(server);
+
+io.on("connection", (socket) => {
+  socket.on("register", async (data) => {
+    const { name, email, phone, password } = data;
+    await User.create({ name, email, phone, password });
+  });
+  console.log("A user created/Registered");
 });
