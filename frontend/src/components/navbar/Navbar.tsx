@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import image from "../../assets/hotdog.png";
 import { ShoppingBasket, User } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [scrollY, setScrollY] = useState(0);
   const isUserLoggedin = false;
   const [onscroll, setOnscroll] = useState(false);
-  console.log(onscroll,scrollY);
+  console.log(onscroll, scrollY);
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -27,11 +29,9 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`${
-        onscroll
-          ? "bg-white fixed transition duration-300 ease-in-out"
-          : "absolute"
-      }  top-0 left-0 z-50 w-full`}
+      className={`fixed top-0 left-0 z-50 w-full
+    transition-all duration-300 ease-in-out
+    ${onscroll ? "bg-white shadow-md" : "bg-transparent"}`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         {/* Logo */}
@@ -73,7 +73,7 @@ const Navbar = () => {
             </div>
           ) : (
             <button className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-medium text-white sm:text-base">
-              Login
+              <Link to="/login">Login</Link>
             </button>
           )}
         </div>

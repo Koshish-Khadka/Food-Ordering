@@ -26,6 +26,7 @@ const Herosection = () => {
             Search
           </button>
         </div>
+ 
       </div>
     </div>
   );
