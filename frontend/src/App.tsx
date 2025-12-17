@@ -1,15 +1,11 @@
-import React from "react";
+import Home from "./components/Home";
 
-function App() {
+const App = () => {
   return (
-    <>
-      <div>
-        <h1 className="text-5xl text-amber-900">
-          Hi this is online food ordering system
-        </h1>
-      </div>
-    </>
+    <div>
+      <Home/>
+    </div>
   );
-}
+};
 
 export default App;
