@@ -1,15 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Productcard from "../productCard/Productcard";
+import axios from "axios";
 
 type categroy = "breakfast" | "maincourse" | "drinks";
+export type productType = {
+  _id: string;
+  productName: string;
+  productDescription: string;
+  productStockQty: number;
+  productPrice: number;
+  productStatus: string;
+  productImage: string;
+};
 
 const Product = () => {
-  const product = [1, 2, 3, 4, 5, 6, 7, 8];
-  const [isActivemenu, setIsActiveMenu] = React.useState("breakfast");
+  const [isActivemenu, setIsActiveMenu] = useState("breakfast");
+  const [products, setProducts] = useState<productType[]>([]);
 
   const handleOptions = (data: categroy) => {
     setIsActiveMenu(data);
   };
+
+  // fetch products
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3000/api/products/getAllProducts"
+      );
+      if (response.status === 200) {
+        setProducts(response.data.data);
+      } else {
+        console.log("Error fetching products:", response.data.message);
+      }
+    } catch (error) {
+      console.log("Failed to fetch product", error);
+    }
+  };
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   return (
     // <div className="max-w-7xl m-auto mt-8">
@@ -58,8 +88,8 @@ const Product = () => {
       </div>
       {/* products cards */}
       <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-        {product.map((items, index) => {
-          return <Productcard key={index} />;
+        {products.map((data) => {
+          return <Productcard data={data} key={data._id} />;
         })}
       </div>
     </div>

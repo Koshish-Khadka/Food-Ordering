@@ -1,13 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import image from "../../assets/hotdog.png";
 import { ShoppingBasket, User } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [scrollY, setScrollY] = useState(0);
-  const isUserLoggedin = false;
+  const isUserLoggedin = true;
   const [onscroll, setOnscroll] = useState(false);
-  console.log(onscroll, scrollY);
+  const items = useSelector((state: any) => state.cart);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,21 +53,21 @@ const Navbar = () => {
         <div>
           {isUserLoggedin ? (
             <div className="flex items-center gap-4">
-              <button
-                title="shop"
-                type="button"
-                className="p-2 hover:bg-gray-100 rounded-full"
-              >
-                <ShoppingBasket
-                  className="h-6 w-6"
-                  color={onscroll ? "black" : "white"}
-                />
+              <button title="shop" type="button" className="p-2 relative">
+                <Link to="/cart">
+                  <ShoppingBasket
+                    className="h-6 w-6 "
+                    color={onscroll ? "black" : "white"}
+                  />
+                </Link>
+
+                {items.length > 0 && (
+                  <span className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center rounded-full bg-red-600 text-white text-xs">
+                    {items.length}
+                  </span>
+                )}
               </button>
-              <button
-                title="user"
-                type="button"
-                className="p-2 hover:bg-gray-100 rounded-full"
-              >
+              <button title="user" type="button" className="p-2 ">
                 <User
                   className="h-6 w-6"
                   color={onscroll ? "black" : "white"}
