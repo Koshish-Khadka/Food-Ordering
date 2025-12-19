@@ -1,10 +1,30 @@
+import { useState } from "react";
+import { useAppDispatch } from "../../store/hooks";
+import { LoginUser } from "../../store/authSlice";
+
 const Login = () => {
+  const [input, setInput] = useState({
+    email: "",
+    password: "",
+  });
+  const dispatch = useAppDispatch();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setInput({ ...input, [name]: value });
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // console.log(input);
+    dispatch(LoginUser(input));
+  };
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="border border-gray-300 p-8 rounded-lg shadow-lg w-full max-w-sm">
         <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
 
-        <form className="space-y-5">
+        <form className="space-y-5" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="text-sm mb-1 block">
               Email Address
@@ -12,6 +32,8 @@ const Login = () => {
             <input
               id="email"
               type="email"
+              onChange={handleChange}
+              name="email"
               placeholder="abcd@gmail.com"
               className="w-full border px-3 py-2 rounded-md
                          focus:ring-2 focus:ring-amber-400 outline-none"
@@ -25,6 +47,8 @@ const Login = () => {
             <input
               id="password"
               type="password"
+              onChange={handleChange}
+              name="password"
               placeholder="Password"
               className="w-full border px-3 py-2 rounded-md
                          focus:ring-2 focus:ring-amber-400 outline-none"

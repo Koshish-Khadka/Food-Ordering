@@ -56,7 +56,7 @@ export const registerUser = async (req, res) => {
   if (createUser) {
     res
       .status(201)
-      .json({ message: "User registered successfully", createUser });
+      .json({ message: "User registered successfully", data: createUser });
   } else {
     res.status(500).json({ message: "Failed to register user" });
   }

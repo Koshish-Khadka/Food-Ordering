@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Productcard from "../productCard/Productcard";
-import axios from "axios";
+import { fetchProducts } from "../../store/productSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 type categroy = "breakfast" | "maincourse" | "drinks";
 export type productType = {
@@ -14,32 +15,20 @@ export type productType = {
 };
 
 const Product = () => {
+  const dispatch = useAppDispatch();
+  const { data, loading, error } = useAppSelector((state) => state.product);
   const [isActivemenu, setIsActiveMenu] = useState("breakfast");
-  const [products, setProducts] = useState<productType[]>([]);
+
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
   const handleOptions = (data: categroy) => {
     setIsActiveMenu(data);
   };
 
-  // fetch products
-
-  const fetchProducts = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:3000/api/products/getAllProducts"
-      );
-      if (response.status === 200) {
-        setProducts(response.data.data);
-      } else {
-        console.log("Error fetching products:", response.data.message);
-      }
-    } catch (error) {
-      console.log("Failed to fetch product", error);
-    }
-  };
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     // <div className="max-w-7xl m-auto mt-8">
@@ -88,7 +77,7 @@ const Product = () => {
       </div>
       {/* products cards */}
       <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-        {products.map((data) => {
+        {data?.map((data) => {
           return <Productcard data={data} key={data._id} />;
         })}
       </div>

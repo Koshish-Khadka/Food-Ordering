@@ -3,7 +3,7 @@ import Signup from "./pages/auth/Signup";
 import Home from "./components/Home";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-import store from "../src/store/store";
+import store from "./store/store";
 import Cart from "./pages/cart/Cart";
 
 const App = () => {

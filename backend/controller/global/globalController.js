@@ -8,7 +8,9 @@ export const getAllProducts = async (req, res) => {
   if (!products) {
     return res.status(404).json({ message: "Products not found" });
   }
-  res.status(200).json({ data: products });
+  res
+    .status(200)
+    .json({ message: "All product fetched successfully", data: products });
 };
 
 export const getProductbyID = async (req, res) => {

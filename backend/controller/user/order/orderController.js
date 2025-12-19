@@ -14,6 +14,7 @@ export const createOrder = async (req, res) => {
         "please provide shippingAddress,items,totalAmount and paymentDetails",
     });
   }
+
   const userOrder = await Order.create({
     user: userId,
     items,
@@ -68,54 +69,11 @@ export const deleteOrder = async (req, res) => {
   res.status(200).json({ message: "Order deleted successfully" });
 };
 
-// update order if status is pending only
 
-// export const updateMyOrder = async (req, res) => {
-//   const { id } = req.params;
-//   const { shippingAddress, items } = req.body;
-//   const userId = req.user.id;
-
-//   console.log("id", id);
-//   console.log(req.body);
-
-//   // get the order by id
-//   const existingOrder = await Order.findById(id);
-//   if (!existingOrder) {
-//     res.status(404).json({ message: "Order not found" });
-//   }
-//   // Check the order status of that order
-//   const OrderStatus = existingOrder.orderStatus;
-//   if (OrderStatus === "ontheway") {
-//     return res
-//       .status(400)
-//       .json({ message: "Cannot update Order its already on the way" });
-//   }
-
-//   // Check if the user trying to update order is the one created it
-//   if (OrderStatus.user.toString() !== userId.toString()) {
-//     return res
-//       .status(403)
-//       .json({ message: "You don't have permission to cancel this order" });
-//   }
-//   // now update the order
-//   const updateOrder = await Order.findByIdAndUpdate(
-//     id,
-//     {
-//       shippingAddress,
-//       items,
-//     },
-//     {
-//       new: true,
-//     }
-//   );
-//   res
-//     .status(200)
-//     .json({ message: "Order updated Successfully", data: updateOrder });
-// };
 export const updateMyOrder = async (req, res) => {
   const { id } = req.params;
   const { shippingAddress, items } = req.body;
-  const userId = req.user.id; 
+  const userId = req.user.id;
 
   // get the order by id
   const existingOrder = await Order.findById(id);

@@ -12,6 +12,7 @@ import adminOrderRoute from "./routes/admin/adminOrderRoute.js";
 import paymentRoute from "./routes/user/paymentRoute.js";
 import { Server } from "socket.io";
 import User from "./models/userModel.js";
+import cors from "cors";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,6 +23,11 @@ dotenv.config({ quiet: true });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("uploads")); //make uploads folder excessable
+app.use(
+  cors({
+    origin: "*",
+  })
+); // to avoid cors error
 // api create
 
 // api.use("/api/users", userRoutes);
@@ -32,7 +38,6 @@ app.use("/api/reviews", userReviewRoute);
 app.use("/api/profile", profileRoute);
 app.use("/api/cart", cartRoute);
 app.use("/api/order", orderRoute);
-app.use("/api/admin", adminOrderRoute);
 app.use("/api/admin", adminOrderRoute);
 app.use("/api/payment", paymentRoute);
 
@@ -60,3 +65,10 @@ io.on("connection", (socket) => {
   });
   console.log("A user created/Registered");
 });
+
+export const getIO = () => {
+  if (!io) {
+    throw new Error("Socket.io not initialized!");
+  }
+  return io;
+};

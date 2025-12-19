@@ -60,6 +60,9 @@ export const verifyKhaltiPayment = async (req, res) => {
     order[0].paymentDetails.method = "Khalti";
     order[0].paymentDetails.status = "paid";
     await order[0].save();
+
+    // notify the user via socket.io
+    
   } else {
     res.redirect("http://localhost:3000/payment/failure");
   }
