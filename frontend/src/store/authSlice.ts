@@ -25,6 +25,7 @@ export const authSlice = createSlice({
   initialState: {
     data: [],
     status: STATUSES.SUCCESS,
+    loading: false,
   },
   reducers: {
     setUser: (state, action) => {
@@ -32,6 +33,9 @@ export const authSlice = createSlice({
     },
     setStatus: (state, action) => {
       state.status = action.payload;
+    },
+    setLoading: (state, action) => {
+      state.loading = action.payload;
     },
   },
 });
@@ -45,11 +49,8 @@ export function registerUser(data: RegisterDataType) {
   return async function registerUserThunk(dispatch: any) {
     dispatch(setStatus(STATUSES.LOADING));
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/auth/register",
-        data
-      );
-      console.log("user register", response.data);
+      await axios.post("http://localhost:3000/api/auth/apple/register", data);
+      // console.log("user register", response.data);
       dispatch(setStatus(STATUSES.SUCCESS));
     } catch (error) {
       console.log(error);
@@ -63,13 +64,14 @@ export function LoginUser(data: LoginDataType) {
     dispatch(setStatus(STATUSES.LOADING));
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/login",
+        "http://localhost:3000/api/auth/login/adhcuaghcw",
         data
       );
       console.log("user login", response.data);
       dispatch(setStatus(STATUSES.SUCCESS));
     } catch (error) {
       console.log(error);
+      dispatch(setStatus(STATUSES.ERROR));
     }
   };
 }

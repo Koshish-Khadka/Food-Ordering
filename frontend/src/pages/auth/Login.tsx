@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { LoginUser } from "../../store/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -8,6 +9,8 @@ const Login = () => {
     password: "",
   });
   const dispatch = useAppDispatch();
+  const { status } = useAppSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -18,7 +21,21 @@ const Login = () => {
     e.preventDefault();
     // console.log(input);
     dispatch(LoginUser(input));
+    if (status === "success") {
+      setInput({
+        email: "",
+        password: "",
+      });
+      navigate("/");
+      return alert("Login Successfull");
+    }
+    if (status === "error") {
+      navigate("/login");
+      alert("Something went wrong");
+      return;
+    }
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="border border-gray-300 p-8 rounded-lg shadow-lg w-full max-w-sm">

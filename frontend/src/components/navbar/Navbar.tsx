@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 const Navbar = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [scrollY, setScrollY] = useState(0);
-  const isUserLoggedin = true;
+  const isUserLoggedin = false;
   const [onscroll, setOnscroll] = useState(false);
   const items = useSelector((state: any) => state.cart);
 
@@ -75,9 +75,14 @@ const Navbar = () => {
               </button>
             </div>
           ) : (
-            <button className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-medium text-white sm:text-base">
-              <Link to="/login">Login</Link>
-            </button>
+            <div className="space-x-4">
+              <button className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-medium text-white sm:text-base transition-all hover:scale-105 duration-150 ease-in-out">
+                <Link to="/login">Login</Link>
+              </button>
+              <button className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-medium text-white sm:text-base transition-all hover:scale-105 duration-150 ease-in-out">
+                <Link to="/signup">Register</Link>
+              </button>
+            </div>
           )}
         </div>
       </div>

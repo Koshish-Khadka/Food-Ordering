@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { registerUser } from "../../store/authSlice";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const dispatch = useAppDispatch();
+  const { status } = useAppSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const [input, setInput] = useState({
     user: "",
@@ -20,6 +23,21 @@ const Signup = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(registerUser(input));
+    if (status === "success") {
+      setInput({
+        user: "",
+        email: "",
+        phoneNumber: "",
+        password: "",
+      });
+      navigate("/login");
+      return alert("User registered successfully");
+    }
+    if (status === "error") {
+      navigate("/signup");
+      alert("Something went wrong");
+      return;
+    }
   };
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -96,9 +114,9 @@ const Signup = () => {
 
         <div className="mt-4 text-center text-sm text-gray-600 space-y-2">
           <p>
-            Don’t have an account?{" "}
-            <a href="/signup" className="text-blue-500">
-              Sign Up
+            Already have an account?{" "}
+            <a href="/login" className="text-blue-500">
+              Login In
             </a>
           </p>
           <a href="/forgot-password" className="text-blue-500">
