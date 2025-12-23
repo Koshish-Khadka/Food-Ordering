@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { registerUser } from "../../store/authSlice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const dispatch = useAppDispatch();
-  const { status } = useAppSelector((state) => state.auth);
+  const { loading, error, data } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
 
   const [input, setInput] = useState({
@@ -23,22 +23,15 @@ const Signup = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(registerUser(input));
-    if (status === "success") {
-      setInput({
-        user: "",
-        email: "",
-        phoneNumber: "",
-        password: "",
-      });
-      navigate("/login");
-      return alert("User registered successfully");
-    }
-    if (status === "error") {
-      navigate("/signup");
-      alert("Something went wrong");
-      return;
-    }
   };
+  
+  useEffect(() => {
+    if (data) {
+      alert("User registered successfully");
+      navigate("/login");
+    }
+  }, [data, navigate]);
+
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="border border-gray-300 p-8 rounded-lg shadow-lg w-full max-w-sm">
@@ -105,11 +98,21 @@ const Signup = () => {
 
           <button
             type="submit"
-            className="w-full py-2 bg-amber-500 text-white rounded-lg
-                       hover:bg-amber-600 transition-colors duration-300"
+            disabled={loading} // prevent multiple clicks
+            className="w-full py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors duration-300 disabled:opacity-50"
           >
-            Login
+            {loading ? "Registering..." : "Signup"} {/* loader text */}
           </button>
+          {error && (
+            <p className="text-red-500 text-sm mt-2 text-center">{error}</p>
+          )}
+
+          {/* Success message */}
+          {data && !error && (
+            <p className="text-green-500 text-sm mt-2 text-center">
+              Registration successful!
+            </p>
+          )}
         </form>
 
         <div className="mt-4 text-center text-sm text-gray-600 space-y-2">

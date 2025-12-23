@@ -1,16 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { LoginUser } from "../../store/authSlice";
+import { loginUser } from "../../store/authSlice";
 import { useNavigate } from "react-router-dom";
+// import { LoginUser } from "../../store/authSlice";
 
 const Login = () => {
+  const dispatch = useAppDispatch();
+  const { loginData, loginError, loginLoading } = useAppSelector(
+    (state) => state.auth
+  );
+  const navigate = useNavigate();
   const [input, setInput] = useState({
     email: "",
     password: "",
   });
-  const dispatch = useAppDispatch();
-  const { status } = useAppSelector((state) => state.auth);
-  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -19,23 +22,14 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // console.log(input);
-    dispatch(LoginUser(input));
-    if (status === "success") {
-      setInput({
-        email: "",
-        password: "",
-      });
-      navigate("/");
-      return alert("Login Successfull");
-    }
-    if (status === "error") {
-      navigate("/login");
-      alert("Something went wrong");
-      return;
-    }
+    dispatch(loginUser(input));
   };
 
+  useEffect(() => {
+    if (loginData && !loginError) {
+      navigate("/");
+    }
+  }, [loginData, navigate, loginError]);
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="border border-gray-300 p-8 rounded-lg shadow-lg w-full max-w-sm">
@@ -77,8 +71,18 @@ const Login = () => {
             className="w-full py-2 bg-amber-500 text-white rounded-lg
                        hover:bg-amber-600 transition-colors duration-300"
           >
-            Login
+            {loginLoading ? "Logging In..." : "Login"}
           </button>
+          {loginError && (
+            <p className="text-red-500 text-sm mt-2 text-center">
+              {loginError}
+            </p>
+          )}
+          {loginData && !loginError && (
+            <p className="text-green-500 text-sm mt-2 text-center">
+              Logged In successfully!
+            </p>
+          )}
         </form>
 
         <div className="mt-4 text-center text-sm text-gray-600 space-y-2">

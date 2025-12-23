@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 type RegisterDataType = {
@@ -14,64 +15,78 @@ type LoginDataType = {
   password: string;
 };
 
-const STATUSES = Object.freeze({
-  SUCCESS: "success",
-  ERROR: "error",
-  LOADING: "loading",
+export const registerUser = createAsyncThunk<
+  any, // return type (API response)
+  RegisterDataType, // input data type
+  { rejectValue: string }
+>("auth/registerUsers", async (data, thunkAPI) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:3000/api/auth/register",
+      data
+    );
+    return response.data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue("Something went wrong");
+  }
+});
+
+export const loginUser = createAsyncThunk<
+  any,
+  LoginDataType,
+  { rejectValue: string }
+>("auth/loginUsers", async (data, thunkAPI) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:3000/api/auth/login",
+      data
+    );
+    return response.data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue("Something went wrong");
+  }
 });
 
 export const authSlice = createSlice({
   name: "auth",
   initialState: {
-    data: [],
-    status: STATUSES.SUCCESS,
+    data: null,
     loading: false,
+    error: null as string | null,
+    loginData: null,
+    loginLoading: false,
+    loginError: null as string | null,
   },
-  reducers: {
-    setUser: (state, action) => {
-      state.data = action.payload;
-    },
-    setStatus: (state, action) => {
-      state.status = action.payload;
-    },
-    setLoading: (state, action) => {
-      state.loading = action.payload;
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
+      })
+
+      // Login
+      .addCase(loginUser.pending, (state) => {
+        state.loginLoading = true;
+        state.loginError = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loginLoading = false;
+        state.loginData = action.payload;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loginLoading = false;
+        state.loginError = action.payload || "Something went wrong";
+      });
   },
 });
 
-export const { setUser, setStatus } = authSlice.actions;
-
 export default authSlice.reducer;
-
-export function registerUser(data: RegisterDataType) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return async function registerUserThunk(dispatch: any) {
-    dispatch(setStatus(STATUSES.LOADING));
-    try {
-      await axios.post("http://localhost:3000/api/auth/apple/register", data);
-      // console.log("user register", response.data);
-      dispatch(setStatus(STATUSES.SUCCESS));
-    } catch (error) {
-      console.log(error);
-      dispatch(setStatus(STATUSES.ERROR));
-    }
-  };
-}
-
-export function LoginUser(data: LoginDataType) {
-  return async function loginUserThunk(dispatch: any) {
-    dispatch(setStatus(STATUSES.LOADING));
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/auth/login/adhcuaghcw",
-        data
-      );
-      console.log("user login", response.data);
-      dispatch(setStatus(STATUSES.SUCCESS));
-    } catch (error) {
-      console.log(error);
-      dispatch(setStatus(STATUSES.ERROR));
-    }
-  };
-}
