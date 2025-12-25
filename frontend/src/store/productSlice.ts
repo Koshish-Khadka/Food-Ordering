@@ -4,7 +4,7 @@ import {
   createSlice,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import axios from "axios";
+import { API } from "../http";
 
 export type productType = {
   _id: string;
@@ -34,9 +34,7 @@ export const fetchProducts = createAsyncThunk<
   { rejectValue: string }
 >("product/fetchProducts", async (_, thunkAPI) => {
   try {
-    const response = await axios.get(
-      "http://localhost:3000/api/products/getAllProducts"
-    );
+    const response = await API.get("products/getAllProducts");
     return response.data.data;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {

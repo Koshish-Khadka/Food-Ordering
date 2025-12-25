@@ -6,9 +6,13 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useAppDispatch();
-  const { loginData, loginError, loginLoading } = useAppSelector(
+  const { loginData, token, loginError, loginLoading } = useAppSelector(
     (state) => state.auth
   );
+
+  console.log("The login data is", loginData);
+  console.log("The Token is", token);
+
   const navigate = useNavigate();
   const [input, setInput] = useState({
     email: "",

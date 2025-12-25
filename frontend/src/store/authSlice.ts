@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import { API } from "../http";
 
 type RegisterDataType = {
   user: string;
@@ -21,10 +21,7 @@ export const registerUser = createAsyncThunk<
   { rejectValue: string }
 >("auth/registerUsers", async (data, thunkAPI) => {
   try {
-    const response = await axios.post(
-      "http://localhost:3000/api/auth/register",
-      data
-    );
+    const response = await API.post("auth/register", data);
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue("Something went wrong");
@@ -37,10 +34,7 @@ export const loginUser = createAsyncThunk<
   { rejectValue: string }
 >("auth/loginUsers", async (data, thunkAPI) => {
   try {
-    const response = await axios.post(
-      "http://localhost:3000/api/auth/login",
-      data
-    );
+    const response = await API.post("/auth/login", data);
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue("Something went wrong");
@@ -53,6 +47,7 @@ export const authSlice = createSlice({
     data: null,
     loading: false,
     error: null as string | null,
+    token: "",
     loginData: null,
     loginLoading: false,
     loginError: null as string | null,
@@ -80,7 +75,9 @@ export const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loginLoading = false;
-        state.loginData = action.payload;
+        state.token = action.payload.token;
+        state.loginData = action.payload.user;
+        localStorage.setItem("token", action.payload.token);
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loginLoading = false;
