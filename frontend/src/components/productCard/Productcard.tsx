@@ -12,6 +12,7 @@ const Productcard = ({ data }: propsType) => {
   const addToCartHandler = (data: productType) => {
     dispatch(addToCart(data));
   };
+
   return (
     <div className="rounded-xl bg-white shadow-sm transition hover:shadow-md">
       <img
