@@ -18,7 +18,7 @@ const ReviewSection = () => {
       {reviews.map((review, index) => (
         <div key={index} className="flex gap-4">
           {/* User Icon */}
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <div className="w-12 h-12 border rounded-full flex items-center justify-center bg-gray-100">
               <User2 className="w-6 h-6 text-gray-500" />
             </div>

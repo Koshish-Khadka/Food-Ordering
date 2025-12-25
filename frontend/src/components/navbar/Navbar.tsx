@@ -1,16 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import image from "../../assets/hotdog.png";
-import { ShoppingBasket, User } from "lucide-react";
+import { ShoppingBasket } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useAppSelector } from "../../store/hooks";
+import { logout } from "../../store/authSlice";
 
 const Navbar = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [scrollY, setScrollY] = useState(0);
-  const isUserLoggedin = false;
+  const { loginUserData } = useAppSelector((state) => state.auth);
+  const [, setScrollY] = useState(0);
   const [onscroll, setOnscroll] = useState(false);
   const items = useSelector((state: any) => state.cart);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,7 +54,19 @@ const Navbar = () => {
 
         {/* Right section */}
         <div>
-          {isUserLoggedin ? (
+          {!loginUserData &&
+          (localStorage.getItem("token") == "" ||
+            localStorage.getItem("token") == null ||
+            localStorage.getItem("token") == undefined) ? (
+            <div className="space-x-4">
+              <button className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-medium text-white sm:text-base transition-all hover:scale-105 duration-150 ease-in-out">
+                <Link to="/login">Login</Link>
+              </button>
+              <button className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-medium text-white sm:text-base transition-all hover:scale-105 duration-150 ease-in-out">
+                <Link to="/signup">Register</Link>
+              </button>
+            </div>
+          ) : (
             <div className="flex items-center gap-4">
               <button title="shop" type="button" className="p-2 relative">
                 <Link to="/cart">
@@ -67,20 +82,11 @@ const Navbar = () => {
                   </span>
                 )}
               </button>
-              <button title="user" type="button" className="p-2 ">
-                <User
-                  className="h-6 w-6"
-                  color={onscroll ? "black" : "white"}
-                />
-              </button>
-            </div>
-          ) : (
-            <div className="space-x-4">
-              <button className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-medium text-white sm:text-base transition-all hover:scale-105 duration-150 ease-in-out">
-                <Link to="/login">Login</Link>
-              </button>
-              <button className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-medium text-white sm:text-base transition-all hover:scale-105 duration-150 ease-in-out">
-                <Link to="/signup">Register</Link>
+              <button
+                className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-medium text-white sm:text-base transition-all hover:scale-105 duration-150 ease-in-out"
+                onClick={() => dispatch(logout())}
+              >
+                Logout
               </button>
             </div>
           )}

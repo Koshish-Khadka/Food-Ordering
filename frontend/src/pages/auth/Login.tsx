@@ -6,12 +6,9 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useAppDispatch();
-  const { loginData, token, loginError, loginLoading } = useAppSelector(
+  const { loginUserData, loginError, loginLoading } = useAppSelector(
     (state) => state.auth
   );
-
-  console.log("The login data is", loginData);
-  console.log("The Token is", token);
 
   const navigate = useNavigate();
   const [input, setInput] = useState({
@@ -30,10 +27,10 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (loginData && !loginError) {
+    if (loginUserData && !loginError) {
       navigate("/");
     }
-  }, [loginData, navigate, loginError]);
+  }, [loginUserData, navigate, loginError]);
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="border border-gray-300 p-8 rounded-lg shadow-lg w-full max-w-sm">
@@ -82,7 +79,7 @@ const Login = () => {
               {loginError}
             </p>
           )}
-          {loginData && !loginError && (
+          {loginUserData && !loginError && (
             <p className="text-green-500 text-sm mt-2 text-center">
               Logged In successfully!
             </p>

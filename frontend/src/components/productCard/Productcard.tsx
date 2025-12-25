@@ -2,6 +2,7 @@ import { Plus } from "lucide-react";
 import type { productType } from "../products/Product";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../store/cartSlice";
+import { Link } from "react-router-dom";
 
 type propsType = {
   data: productType;
@@ -15,11 +16,13 @@ const Productcard = ({ data }: propsType) => {
 
   return (
     <div className="rounded-xl bg-white shadow-sm transition hover:shadow-md">
-      <img
-        src={data.productImage}
-        alt="product"
-        className="h-40 w-full object-cover rounded-3xl sm:h-44 md:h-56 transition hover:scale-105"
-      />
+      <Link to={`products/${data._id}`} key={data._id}>
+        <img
+          src={data.productImage}
+          alt="product"
+          className="h-40 w-full object-cover rounded-3xl sm:h-44 md:h-56 transition hover:scale-105"
+        />
+      </Link>
 
       <div className="p-3">
         <h2 className="text-sm uppercase font-semibold line-clamp-3 md:text-base">

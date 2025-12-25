@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { API } from "../http";
+import { href } from "react-router-dom";
 
 type RegisterDataType = {
   user: string;
@@ -44,24 +45,33 @@ export const loginUser = createAsyncThunk<
 export const authSlice = createSlice({
   name: "auth",
   initialState: {
-    data: null,
     loading: false,
     error: null as string | null,
     token: "",
-    loginData: null,
+    loginUserData: null,
     loginLoading: false,
     loginError: null as string | null,
   },
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.token = "";
+      state.loginUserData = null;
+      state.loading = false;
+      state.loginLoading = false;
+      state.error = null;
+      state.loginError = null;
+      localStorage.removeItem("token");
+      href("/");
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(registerUser.fulfilled, (state, action) => {
+      .addCase(registerUser.fulfilled, (state) => {
         state.loading = false;
-        state.data = action.payload;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -76,7 +86,7 @@ export const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loginLoading = false;
         state.token = action.payload.token;
-        state.loginData = action.payload.user;
+        state.loginUserData = action.payload.user;
         localStorage.setItem("token", action.payload.token);
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -86,4 +96,5 @@ export const authSlice = createSlice({
   },
 });
 
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

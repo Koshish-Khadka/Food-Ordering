@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Productcard from "../productCard/Productcard";
 import { fetchProducts } from "../../store/productSlice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { Link } from "react-router-dom";
 
 type categroy = "breakfast" | "maincourse" | "drinks";
 export type productType = {
@@ -80,9 +79,9 @@ const Product = () => {
       <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
         {data?.map((data) => {
           return (
-            <Link to={`products/${data._id}`} key={data._id} >
-              <Productcard data={data} />
-            </Link>
+            // <Link to={`products/${data._id}`} key={data._id} >
+            <Productcard data={data} key={data._id} />
+            // </Link>
           );
         })}
       </div>

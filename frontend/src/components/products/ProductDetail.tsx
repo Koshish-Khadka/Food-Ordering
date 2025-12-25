@@ -19,7 +19,7 @@ const ProductDetail = () => {
   const { selectedProduct, error, loading } = useAppSelector(
     (state) => state.product
   );
-  console.log("Data", selectedProduct);
+
   if (loading) {
     return (
       <div className="h-screen flex justify-center items-center">
@@ -59,8 +59,17 @@ const ProductDetail = () => {
                 <p>(23)</p>
               </div>
               <p className="text-base flex gap-x-12 py-3">
+                {selectedProduct?.productDescription}
+              </p>
+              <p className="text-sm flex gap-x-12 py-3 items-center">
+                Status{" "}
+                <span className="font-medium text-green-600">
+                  {selectedProduct?.productStatus}
+                </span>
+              </p>
+              <p className="text-sm flex gap-x-12 py-3 items-center">
                 Price{" "}
-                <span className="text-lg font-medium">
+                <span className=" font-medium">
                   {selectedProduct?.productPrice}
                 </span>
               </p>
