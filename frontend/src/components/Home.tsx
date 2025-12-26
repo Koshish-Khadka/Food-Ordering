@@ -4,7 +4,10 @@ import Product from "./products/Product";
 import Aboutus from "./aboutus/Aboutus";
 import Footer from "./footer/Footer";
 
+
 const Home = () => {
+
+
   return (
     <div className="relative">
       <header>

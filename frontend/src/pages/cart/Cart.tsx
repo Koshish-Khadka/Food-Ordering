@@ -1,21 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useSelector } from "react-redux";
-import type { productType } from "../../components/products/Product";
 import { Link } from "react-router-dom";
+import { useAppSelector } from "../../store/hooks";
 
 const Cart = () => {
-  const items: productType[] = useSelector((state: any) => state.cart);
-  // const dispatch = useDispatch();
+  const { cart } = useAppSelector((state) => state.cart);
+  // console.log("cart", cart);
+
+  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const totalAmount = cart.reduce(
+    (acc, item) => acc + item.product.productPrice,
+    0
+  );
 
   return (
     <div className="flex flex-col md:flex-row py-16 max-w-6xl w-full px-6 mx-auto">
       <div className="flex-1 max-w-4xl">
         <h1 className="text-3xl font-medium mb-6">
           Shopping Cart{" "}
-          <span className="text-sm text-indigo-500">{items.length} Items</span>
+          <span className="text-sm text-indigo-500">{cart.length} Items</span>
         </h1>
-        {items.length === 0 ? (
+        {cart.length === 0 ? (
           <p className="text-center text-xl font-bold text-red-700 my-12">
             Your cart is empty.
           </p>
@@ -27,7 +32,7 @@ const Cart = () => {
           </div>
         )}
 
-        {items.map((product, index) => (
+        {cart.map((item, index) => (
           <div
             key={index}
             className="grid grid-cols-[2fr_1fr_1fr] text-gray-500 items-center text-sm md:text-base font-medium pt-3"
@@ -36,17 +41,17 @@ const Cart = () => {
               <div className="cursor-pointer w-24 h-24 flex items-center justify-center border border-gray-300 rounded overflow-hidden">
                 <img
                   className="max-w-full h-full object-cover"
-                  src={product.productImage}
-                  alt={product.productName}
+                  src={item.product.productImage}
+                  alt={item.product.productName}
                 />
               </div>
               <div>
                 <p className="hidden md:block font-semibold">
-                  {product.productName}
+                  {item.product.productName}
                 </p>
               </div>
             </div>
-            <p className="text-center">{product.productPrice}</p>
+            <p className="text-center">{item.product.productPrice}</p>
             <button title="btn" className="cursor-pointer mx-auto">
               <svg
                 width="20"
@@ -97,20 +102,16 @@ const Cart = () => {
 
         <div className="text-gray-500 mt-4 space-y-2">
           <p className="flex justify-between">
-            <span>Price</span>
-            <span>$20</span>
+            <span>Total items</span>
+            <span>{totalItems}</span>
           </p>
           <p className="flex justify-between">
             <span>Shipping Fee</span>
             <span className="text-green-600">Free</span>
           </p>
-          <p className="flex justify-between">
-            <span>Tax (2%)</span>
-            <span>$20</span>
-          </p>
           <p className="flex justify-between text-lg font-medium mt-3">
             <span>Total Amount:</span>
-            <span>$20</span>
+            <span>${totalAmount}</span>
           </p>
         </div>
 

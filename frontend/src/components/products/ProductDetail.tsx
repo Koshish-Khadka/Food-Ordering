@@ -10,15 +10,22 @@ const ProductDetail = () => {
   const { productId } = useParams();
   const value = 2;
   const dispatch = useAppDispatch();
-  const { selectedProduct, error, loading } = useAppSelector(
-    (state) => state.product
-  );
+  const {
+    selectedProduct,
+    error: productError,
+    loading: productLoading,
+  } = useAppSelector((state) => state.product);
   const { loginUserData } = useAppSelector((state) => state.auth);
-  const { cart, carterror } = useAppSelector((state) => state.cart);
 
-  console.log("The cart data is", cart);
-  console.log("error", carterror);
-  const naviagte = useNavigate();
+  const {
+    cart,
+    error: cartError,
+    loading: cartLoading,
+  } = useAppSelector((state) => state.cart);
+
+  console.log("Cart data", cart);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (productId) {
@@ -32,7 +39,7 @@ const ProductDetail = () => {
       localStorage.getItem("token") == null ||
       localStorage.getItem("token") == undefined
     ) {
-      naviagte("/login");
+      navigate("/login");
       return;
     }
     if (!productId) {
@@ -41,21 +48,27 @@ const ProductDetail = () => {
     dispatch(addToCart(productId));
   };
 
-  if (loading) {
+  if (productLoading) {
     return (
       <div className="h-screen flex justify-center items-center">
         <p className="text-center">Context loading....</p>;
       </div>
     );
   }
-  if (error) {
+  if (productError) {
     return (
       <div className="h-screen flex justify-center items-center">
-        <p className="text-red-500">{error}</p>
+        <p className="text-red-500">{productError}</p>
       </div>
     );
   }
-
+  if (cartError) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <p className="text-red-500">{cartError}</p>
+      </div>
+    );
+  }
   return (
     <div className="pt-20">
       <div className=" max-w-6xl m-auto ">
@@ -100,7 +113,7 @@ const ProductDetail = () => {
                 className="px-3 py-2 w-full rounded-md font-bold bg-amber-500 text-white transition-all hover:scale-105 duration-150 ease-in-out"
                 onClick={() => addToCartHandler()}
               >
-                Add to Cart
+                {cartLoading ? <p>Loading...</p> : <p>Add to Cart</p>}
               </button>
             </div>
           </div>
