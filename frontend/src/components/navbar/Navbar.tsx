@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import image from "../../assets/hotdog.png";
 import { ShoppingBasket } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useAppSelector } from "../../store/hooks";
 import { logout } from "../../store/authSlice";
@@ -32,6 +32,12 @@ const Navbar = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [onscroll]);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
 
   return (
     <nav
@@ -84,7 +90,7 @@ const Navbar = () => {
               </button>
               <button
                 className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-medium text-white sm:text-base transition-all hover:scale-105 duration-150 ease-in-out"
-                onClick={() => dispatch(logout())}
+                onClick={() => handleLogout()}
               >
                 Logout
               </button>

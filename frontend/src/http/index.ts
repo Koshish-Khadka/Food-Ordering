@@ -11,10 +11,10 @@ export const API = axios.create({
 });
 
 // This is authenticated api
-// export const APIAuthenticated = axios.create({
-//   baseURL: "http://localhost:3000/api",
-//   headers: {
-//     "Content-Type": "application/json",
-//     "Authorization":""
-//   },
-// });
+export const APIAuthenticated = axios.create({
+  baseURL: "http://localhost:3000/api",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `${localStorage.getItem("token")}`,
+  },
+});

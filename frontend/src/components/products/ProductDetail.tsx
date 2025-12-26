@@ -1,14 +1,24 @@
 import Rating from "@mui/material/Rating";
 import ReviewSection from "./ReviewSection";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { fetchSingleProduct } from "../../store/productSlice";
+import { addToCart } from "../../store/cartSlice";
 
 const ProductDetail = () => {
   const { productId } = useParams();
   const value = 2;
   const dispatch = useAppDispatch();
+  const { selectedProduct, error, loading } = useAppSelector(
+    (state) => state.product
+  );
+  const { loginUserData } = useAppSelector((state) => state.auth);
+  const { cart, carterror } = useAppSelector((state) => state.cart);
+
+  console.log("The cart data is", cart);
+  console.log("error", carterror);
+  const naviagte = useNavigate();
 
   useEffect(() => {
     if (productId) {
@@ -16,9 +26,20 @@ const ProductDetail = () => {
     }
   }, [dispatch, productId]);
 
-  const { selectedProduct, error, loading } = useAppSelector(
-    (state) => state.product
-  );
+  const addToCartHandler = () => {
+    if (
+      (!loginUserData && localStorage.getItem("token") == "") ||
+      localStorage.getItem("token") == null ||
+      localStorage.getItem("token") == undefined
+    ) {
+      naviagte("/login");
+      return;
+    }
+    if (!productId) {
+      return alert("ProductId not found");
+    }
+    dispatch(addToCart(productId));
+  };
 
   if (loading) {
     return (
@@ -75,7 +96,10 @@ const ProductDetail = () => {
               </p>
             </div>
             <div className="">
-              <button className="px-3 py-2 w-full rounded-md font-bold bg-amber-500 text-white transition-all hover:scale-105 duration-150 ease-in-out">
+              <button
+                className="px-3 py-2 w-full rounded-md font-bold bg-amber-500 text-white transition-all hover:scale-105 duration-150 ease-in-out"
+                onClick={() => addToCartHandler()}
+              >
                 Add to Cart
               </button>
             </div>

@@ -1,17 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+
+import { useSelector } from "react-redux";
 import type { productType } from "../../components/products/Product";
 import { Link } from "react-router-dom";
-import { removeFromCart } from "../../store/cartSlice";
 
 const Cart = () => {
   const items: productType[] = useSelector((state: any) => state.cart);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  const handleProductRemove = (index: string) => {
-    dispatch(removeFromCart(index));
-  };
   return (
     <div className="flex flex-col md:flex-row py-16 max-w-6xl w-full px-6 mx-auto">
       <div className="flex-1 max-w-4xl">
@@ -51,11 +47,7 @@ const Cart = () => {
               </div>
             </div>
             <p className="text-center">{product.productPrice}</p>
-            <button
-              title="btn"
-              className="cursor-pointer mx-auto"
-              onClick={() => handleProductRemove(product._id)}
-            >
+            <button title="btn" className="cursor-pointer mx-auto">
               <svg
                 width="20"
                 height="20"
