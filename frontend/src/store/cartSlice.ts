@@ -23,6 +23,14 @@ type cartStateType = {
   loading: boolean;
   error: string | null;
 };
+type UpdateCartType = {
+  productId: string;
+  quantity: number;
+};
+type UpdateCartResponse = {
+  productId: string;
+  quantity: number;
+};
 
 const initialState: cartStateType = {
   cart: [],
@@ -54,6 +62,22 @@ export const getCartItems = createAsyncThunk<CartItemType[], void>(
     }
   }
 );
+
+export const updateCartItems = createAsyncThunk<
+  UpdateCartResponse,
+  UpdateCartType
+>("cart/updateCartItems", async (data, thunkAPI) => {
+  try {
+    const response = await APIAuthenticated.patch(
+      `/cart/${data.productId}`,
+      // data.quantity
+      { quantity: data.quantity }
+    );
+    return response.data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue("Failed to update cart itemsF");
+  }
+});
 
 const cartSlice = createSlice({
   name: "cart",
@@ -93,6 +117,24 @@ const cartSlice = createSlice({
       .addCase(getCartItems.rejected, (state) => {
         state.loading = false;
         state.error = "Failed to get cart items";
+      })
+
+      // update cart
+      .addCase(updateCartItems.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateCartItems.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.cart.findIndex(
+          (item) => item.product._id === action.payload.productId
+        );
+        if (index !== -1) {
+          state.cart[index].quantity = action.payload.quantity;
+        }
+      })
+      .addCase(updateCartItems.rejected, (state) => {
+        state.loading = false;
+        state.error = "Update failed";
       });
   },
 });

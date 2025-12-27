@@ -1,17 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Link } from "react-router-dom";
-import { useAppSelector } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { getCartItems, updateCartItems } from "../../store/cartSlice";
 
 const Cart = () => {
   const { cart } = useAppSelector((state) => state.cart);
   // console.log("cart", cart);
-
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
   const totalAmount = cart.reduce(
-    (acc, item) => acc + item.product.productPrice,
+    (acc, item) => acc + item.product.productPrice * item.quantity,
     0
   );
+  const dispatch = useAppDispatch();
+
+  const handleQuantityChange = async (productId: string, quantity: number) => {
+    if (quantity < 1) return;
+
+    await dispatch(updateCartItems({ productId, quantity }));
+    await dispatch(getCartItems());
+  };
 
   return (
     <div className="flex flex-col md:flex-row py-16 max-w-6xl w-full px-6 mx-auto">
@@ -25,8 +33,9 @@ const Cart = () => {
             Your cart is empty.
           </p>
         ) : (
-          <div className="grid grid-cols-[2fr_1fr_1fr] text-gray-500 text-base font-medium pb-3">
+          <div className="grid grid-cols-[2fr_2fr_1fr_1fr] text-gray-500 text-base font-medium pb-3">
             <p className="text-left">Product Details</p>
+            <p className="text-center">Quantity</p>
             <p className="text-center">price</p>
             <p className="text-center">Action</p>
           </div>
@@ -35,7 +44,7 @@ const Cart = () => {
         {cart.map((item, index) => (
           <div
             key={index}
-            className="grid grid-cols-[2fr_1fr_1fr] text-gray-500 items-center text-sm md:text-base font-medium pt-3"
+            className="grid grid-cols-[2fr_2fr_1fr_1fr] text-gray-500 items-center text-sm md:text-base font-medium pt-3"
           >
             <div className="flex items-center md:gap-6 gap-3">
               <div className="cursor-pointer w-24 h-24 flex items-center justify-center border border-gray-300 rounded overflow-hidden">
@@ -51,8 +60,39 @@ const Cart = () => {
                 </p>
               </div>
             </div>
-            <p className="text-center">{item.product.productPrice}</p>
-            <button title="btn" className="cursor-pointer mx-auto">
+            <div className="flex justify-center items-center space-x-4">
+              <button
+                className="border px-2 rounded-l-md transition-all hover:scale-110 duration-200 ease-in"
+                onClick={() =>
+                  handleQuantityChange(
+                    item.product._id,
+                    Math.max(1, item.quantity - 1)
+                  )
+                }
+              >
+                -
+              </button>
+              <p className="text-center">{item.quantity}</p>
+              <button
+                className="border px-2 rounded-r-md transition-all hover:scale-110 duration-200 ease-in"
+                onClick={() =>
+                  handleQuantityChange(
+                    item.product._id,
+                    Math.max(1, item.quantity + 1)
+                  )
+                }
+              >
+                +
+              </button>
+            </div>
+            <p className="text-center">
+              {item.quantity * item.product.productPrice}
+            </p>
+
+            <button
+              title="btn"
+              className="cursor-pointer mx-auto transition-all hover:scale-125 duration-150 ease-in"
+            >
               <svg
                 width="20"
                 height="20"
