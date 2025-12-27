@@ -17,14 +17,6 @@ const ProductDetail = () => {
   } = useAppSelector((state) => state.product);
   const { loginUserData } = useAppSelector((state) => state.auth);
 
-  const {
-    cart,
-    error: cartError,
-    loading: cartLoading,
-  } = useAppSelector((state) => state.cart);
-
-  console.log("Cart data", cart);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,13 +54,7 @@ const ProductDetail = () => {
       </div>
     );
   }
-  if (cartError) {
-    return (
-      <div className="h-screen flex justify-center items-center">
-        <p className="text-red-500">{cartError}</p>
-      </div>
-    );
-  }
+
   return (
     <div className="pt-20">
       <div className=" max-w-6xl m-auto ">
@@ -113,7 +99,7 @@ const ProductDetail = () => {
                 className="px-3 py-2 w-full rounded-md font-bold bg-amber-500 text-white transition-all hover:scale-105 duration-150 ease-in-out"
                 onClick={() => addToCartHandler()}
               >
-                {cartLoading ? <p>Loading...</p> : <p>Add to Cart</p>}
+                Add to Cart
               </button>
             </div>
           </div>

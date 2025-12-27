@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { API } from "../http";
-import { href } from "react-router-dom";
 
 type RegisterDataType = {
   user: string;
@@ -47,7 +46,7 @@ export const authSlice = createSlice({
   initialState: {
     loading: false,
     error: null as string | null,
-    token: "",
+    token: localStorage.getItem("token") || "",
     loginUserData: null,
     loginLoading: false,
     loginError: null as string | null,
@@ -61,7 +60,6 @@ export const authSlice = createSlice({
       state.error = null;
       state.loginError = null;
       localStorage.removeItem("token");
-      href("/");
     },
   },
   extraReducers: (builder) => {

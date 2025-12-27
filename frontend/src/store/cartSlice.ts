@@ -17,6 +17,7 @@ type CartItemType = {
   quantity: number;
   product: ProductType;
 };
+
 type cartStateType = {
   cart: CartItemType[];
   loading: boolean;

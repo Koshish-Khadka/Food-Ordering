@@ -7,6 +7,9 @@ import Cart from "./pages/cart/Cart";
 import ProductDetail from "./components/products/ProductDetail";
 import { Provider } from "react-redux";
 import store from "./store/store";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
+import { useEffect } from "react";
+import { getCartItems } from "./store/cartSlice";
 
 const Layout = () => {
   const location = useLocation();
@@ -14,6 +17,14 @@ const Layout = () => {
   const hideNavbarRoutes = ["/login", "/signup"];
 
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
+
+  const { token } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (token) {
+      dispatch(getCartItems());
+    }
+  }, [token, dispatch]);
 
   return (
     <>
@@ -31,7 +42,6 @@ const Layout = () => {
 };
 
 const App = () => {
-
   return (
     <Provider store={store}>
       <BrowserRouter>

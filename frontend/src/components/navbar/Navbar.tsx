@@ -4,9 +4,8 @@ import image from "../../assets/hotdog.png";
 import { ShoppingBasket } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { useAppSelector } from "../../store/hooks";
 import { logout } from "../../store/authSlice";
-import { getCartItems } from "../../store/cartSlice";
 
 const Navbar = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -15,12 +14,13 @@ const Navbar = () => {
   const [onscroll, setOnscroll] = useState(false);
   const dispatch = useDispatch();
   const { cart } = useAppSelector((state) => state.cart);
-  const appDispatch = useAppDispatch();
 
   // // fetch user cart items on first render
-  useEffect(() => {
-    appDispatch(getCartItems());
-  }, [appDispatch]);
+  // useEffect(() => {
+  //   if (token && !loginError) {
+  //     appDispatch(getCartItems());
+  //   }
+  // }, [token, appDispatch, loginError]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -55,17 +55,17 @@ const Navbar = () => {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         {/* Logo */}
         <Link to={"/"}>
-        <div className="flex items-center gap-2">
-          <img src={image} alt="logo" className="h-10 w-10 object-cover" />
-          <h1
-            className={`text-lg ${
-              onscroll ? `text-black` : `text-white`
-            } font-bold sm:text-xl`}
+          <div className="flex items-center gap-2">
+            <img src={image} alt="logo" className="h-10 w-10 object-cover" />
+            <h1
+              className={`text-lg ${
+                onscroll ? `text-black` : `text-white`
+              } font-bold sm:text-xl`}
             >
-            BookMandu
-          </h1>
-        </div>
-            </Link>
+              BookMandu
+            </h1>
+          </div>
+        </Link>
 
         {/* Right section */}
         <div>

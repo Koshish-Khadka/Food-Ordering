@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { loginUser } from "../../store/authSlice";
 import { useNavigate } from "react-router-dom";
-// import { LoginUser } from "../../store/authSlice";
+
 
 const Login = () => {
   const dispatch = useAppDispatch();
-  const { loginUserData, loginError, loginLoading } = useAppSelector(
+  const { token, loginError, loginLoading } = useAppSelector(
     (state) => state.auth
   );
 
@@ -24,13 +24,14 @@ const Login = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(loginUser(input));
+
   };
 
   useEffect(() => {
-    if (loginUserData && !loginError) {
+    if (token && !loginError) {
       navigate("/");
     }
-  }, [loginUserData, navigate, loginError]);
+  }, [token, navigate, loginError]);
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="border border-gray-300 p-8 rounded-lg shadow-lg w-full max-w-sm">
@@ -79,7 +80,7 @@ const Login = () => {
               {loginError}
             </p>
           )}
-          {loginUserData && !loginError && (
+          {token && !loginError && (
             <p className="text-green-500 text-sm mt-2 text-center">
               Logged In successfully!
             </p>
