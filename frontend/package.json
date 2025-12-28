@@ -20,6 +20,7 @@
     "lucide-react": "^0.561.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-hook-form": "^7.69.0",
     "react-rating": "^2.0.5",
     "react-rating-stars-component": "^2.2.0",
     "react-redux": "^9.2.0",

@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
-import Home from "./components/Home";
+import Home from "./pages/Home";
 import Cart from "./pages/cart/Cart";
 import ProductDetail from "./components/products/ProductDetail";
 import { Provider } from "react-redux";
@@ -10,6 +10,7 @@ import store from "./store/store";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { useEffect } from "react";
 import { fetchUserCart } from "./store/cartSlice";
+import Checkout from "./pages/checkout/Checkout";
 
 const Layout = () => {
   const location = useLocation();
@@ -20,7 +21,7 @@ const Layout = () => {
 
   const { token } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
-  
+
   useEffect(() => {
     if (token) {
       dispatch(fetchUserCart());
@@ -37,6 +38,7 @@ const Layout = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/products/:productId" element={<ProductDetail />} />
+        <Route path="/order/checkout" element={<Checkout />} />
       </Routes>
     </>
   );

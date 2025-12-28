@@ -33,7 +33,7 @@ const Cart = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row py-16 max-w-6xl w-full px-6 mx-auto">
+    <div className=" flex flex-col md:flex-row py-16 max-w-6xl w-full px-6 mx-auto">
       <div className="flex-1 max-w-4xl">
         <h1 className="text-3xl font-medium mb-6">
           Shopping Cart{" "}
@@ -120,8 +120,8 @@ const Cart = () => {
           </div>
         ))}
 
-        <button className="group cursor-pointer flex items-center mt-8 gap-2 text-indigo-500 font-medium">
-          <Link to={"/"}>
+        <Link to={"/"}>
+          <button className="group cursor-pointer flex items-center mt-8 gap-2 text-indigo-500 font-medium hover:border p-2 rounded-md">
             <svg
               width="15"
               height="11"
@@ -138,8 +138,8 @@ const Cart = () => {
               />
             </svg>
             Continue Shopping
-          </Link>
-        </button>
+          </button>
+        </Link>
       </div>
 
       <div className="max-w-[360px] w-full bg-gray-100/40 p-5 max-md:mt-16 border border-gray-300/70">
@@ -162,10 +162,11 @@ const Cart = () => {
             <span>${totalAmount}</span>
           </p>
         </div>
-
-        <button className="w-full py-3 mt-6 cursor-pointer bg-indigo-500 text-white font-medium hover:bg-indigo-600 transition">
-          Place Order
-        </button>
+        <Link to={"/order/checkout"}>
+          <button className="w-full py-3 mt-6 cursor-pointer bg-indigo-500 text-white font-medium hover:bg-indigo-600 transition">
+            Place Order
+          </button>
+        </Link>
       </div>
     </div>
   );

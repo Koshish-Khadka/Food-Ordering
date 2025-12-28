@@ -1,8 +1,8 @@
-import Navbar from "./navbar/Navbar";
-import Herosection from "./herosection/Herosection";
-import Product from "./products/Product";
-import Aboutus from "./aboutus/Aboutus";
-import Footer from "./footer/Footer";
+import Navbar from "../components/navbar/Navbar";
+import Herosection from "../components/herosection/Herosection";
+import Product from "../components/products/Product";
+import Aboutus from "../components/aboutus/Aboutus";
+import Footer from "../components/footer/Footer";
 
 
 const Home = () => {
