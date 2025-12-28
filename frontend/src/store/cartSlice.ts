@@ -1,83 +1,86 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-import { createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
-import { createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import { APIAuthenticated } from "../http";
 
-type ProductType = {
-  _id: string;
-  productName: string;
-  productDescription: string;
-  productPrice: number;
-  productImage: string;
-};
-
-type CartItemType = {
+type cartItemsType = {
   quantity: number;
-  product: ProductType;
+  product: {
+    _id: string;
+    productName: string;
+    productDescription: string;
+    productPrice: number;
+    productImage: string;
+  };
 };
 
-type cartStateType = {
-  cart: CartItemType[];
-  loading: boolean;
+type initialStateType = {
+  cartItems: cartItemsType[];
   error: string | null;
+  loading: boolean;
 };
-type UpdateCartType = {
-  productId: string;
-  quantity: number;
-};
-type UpdateCartResponse = {
+
+type updateCartItemsPropsType = {
   productId: string;
   quantity: number;
 };
 
-const initialState: cartStateType = {
-  cart: [],
-  loading: false,
-  error: null,
-};
-
-export const addToCart = createAsyncThunk<
-  CartItemType[], //response type
-  string, //productId type
-  { rejectValue: string }
->("cart/addToCart", async (productId, thunkAPI) => {
-  try {
-    const response = await APIAuthenticated.post(`/cart/${productId}`);
-    return response.data;
-  } catch (error) {
-    return thunkAPI.rejectWithValue("Failed to add product to cart");
+export const addToCart = createAsyncThunk<cartItemsType[], string>(
+  "cart/addToCart",
+  async (productId, thunkAPI) => {
+    try {
+      const response = await APIAuthenticated.post(`/cart/${productId}`);
+      return response.data.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
   }
-});
+);
 
-export const getCartItems = createAsyncThunk<CartItemType[], void>(
-  "cart/getCartItems",
+export const fetchUserCart = createAsyncThunk<cartItemsType[], void>(
+  "cart/fetchUserCart",
   async (_, thunkAPI) => {
     try {
       const response = await APIAuthenticated.get("/cart/getCartItems");
       return response.data.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Failed to get cart items");
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
 
 export const updateCartItems = createAsyncThunk<
-  UpdateCartResponse,
-  UpdateCartType
->("cart/updateCartItems", async (data, thunkAPI) => {
+  { productId: string; quantity: number },
+  updateCartItemsPropsType
+>("cart/updateCartItems", async ({ productId, quantity }, thunkAPI) => {
   try {
-    const response = await APIAuthenticated.patch(
-      `/cart/${data.productId}`,
-      // data.quantity
-      { quantity: data.quantity }
-    );
-    return response.data;
+    await APIAuthenticated.patch(`/cart/${productId}`, { quantity });
+    return { productId, quantity };
   } catch (error) {
-    return thunkAPI.rejectWithValue("Failed to update cart itemsF");
+    return thunkAPI.rejectWithValue(error);
   }
 });
+
+export const deleteCartItem = createAsyncThunk<{ productId: string }, string>(
+  "cart/deleteCartItem",
+  async (productId, thunkAPI) => {
+    try {
+      await APIAuthenticated.delete(`/cart/${productId}`);
+      return { productId };
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+const initialState: initialStateType = {
+  cartItems: [] as cartItemsType[],
+  error: null,
+  loading: false,
+};
 
 const cartSlice = createSlice({
   name: "cart",
@@ -91,50 +94,65 @@ const cartSlice = createSlice({
       })
       .addCase(
         addToCart.fulfilled,
-        (state, action: PayloadAction<CartItemType[]>) => {
+        (state, action: PayloadAction<cartItemsType[]>) => {
           state.loading = false;
-          state.cart = action.payload;
+          state.cartItems = action.payload;
         }
       )
       .addCase(addToCart.rejected, (state) => {
         state.loading = false;
         state.error = "Failed to add to cart";
       })
-
-      // getCartItems
-      .addCase(getCartItems.pending, (state) => {
+      // fetchUserCart
+      .addCase(fetchUserCart.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchUserCart.fulfilled,
+        (state, action: PayloadAction<cartItemsType[]>) => {
+          state.loading = false;
+          state.cartItems = action.payload;
+        }
+      )
+      .addCase(fetchUserCart.rejected, (state) => {
+        state.loading = false;
+        state.error = "Failed to add to cart";
+      })
+      // updateCart
+      .addCase(updateCartItems.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
 
-      .addCase(
-        getCartItems.fulfilled,
-        (state, action: PayloadAction<CartItemType[]>) => {
-          state.loading = false;
-          state.cart = action.payload;
+      .addCase(updateCartItems.fulfilled, (state, action) => {
+        const item = state.cartItems.find(
+          (i) => i.product._id === action.payload.productId
+        );
+        if (item) {
+          item.quantity = action.payload.quantity;
         }
-      )
-      .addCase(getCartItems.rejected, (state) => {
-        state.loading = false;
-        state.error = "Failed to get cart items";
       })
 
-      // update cart
-      .addCase(updateCartItems.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(updateCartItems.fulfilled, (state, action) => {
-        state.loading = false;
-        const index = state.cart.findIndex(
-          (item) => item.product._id === action.payload.productId
-        );
-        if (index !== -1) {
-          state.cart[index].quantity = action.payload.quantity;
-        }
-      })
       .addCase(updateCartItems.rejected, (state) => {
         state.loading = false;
-        state.error = "Update failed";
+        state.error = "Failed to add to cart";
+      })
+      // deleteCartItems
+      .addCase(deleteCartItem.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(deleteCartItem.fulfilled, (state, action) => {
+        state.cartItems = state.cartItems.filter(
+          (item) => item.product._id !== action.payload.productId
+        );
+      })
+
+      .addCase(deleteCartItem.rejected, (state) => {
+        state.loading = false;
+        state.error = "Failed to add to cart";
       });
   },
 });

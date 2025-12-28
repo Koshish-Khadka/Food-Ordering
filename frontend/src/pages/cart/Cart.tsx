@@ -2,23 +2,34 @@
 
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { getCartItems, updateCartItems } from "../../store/cartSlice";
+import { deleteCartItem, updateCartItems } from "../../store/cartSlice";
 
 const Cart = () => {
-  const { cart } = useAppSelector((state) => state.cart);
-  // console.log("cart", cart);
-  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
-  const totalAmount = cart.reduce(
-    (acc, item) => acc + item.product.productPrice * item.quantity,
+  const { cartItems } = useAppSelector((state) => state.cart);
+  const isCartArray = Array.isArray(cartItems) ? cartItems : [];
+
+  // console.log("Cart items", isCartArray);
+
+  const totalItems = isCartArray.reduce(
+    (acc, item) => acc + (item.quantity || 0),
     0
   );
+
+  const totalAmount = isCartArray.reduce(
+    (acc, item) =>
+      acc + (item.quantity || 0) * (item.product.productPrice || 0),
+    0
+  );
+
   const dispatch = useAppDispatch();
 
   const handleQuantityChange = async (productId: string, quantity: number) => {
     if (quantity < 1) return;
-
     await dispatch(updateCartItems({ productId, quantity }));
-    await dispatch(getCartItems());
+  };
+
+  const handleItemDelete = async (productId: string) => {
+    await dispatch(deleteCartItem(productId));
   };
 
   return (
@@ -26,9 +37,11 @@ const Cart = () => {
       <div className="flex-1 max-w-4xl">
         <h1 className="text-3xl font-medium mb-6">
           Shopping Cart{" "}
-          <span className="text-sm text-indigo-500">{cart.length} Items</span>
+          <span className="text-sm text-indigo-500">
+            {isCartArray.length} Items
+          </span>
         </h1>
-        {cart.length === 0 ? (
+        {isCartArray.length === 0 ? (
           <p className="text-center text-xl font-bold text-red-700 my-12">
             Your cart is empty.
           </p>
@@ -41,9 +54,9 @@ const Cart = () => {
           </div>
         )}
 
-        {cart.map((item, index) => (
+        {isCartArray.map((item, index) => (
           <div
-            key={index}
+            key={item.product._id + "-" + index}
             className="grid grid-cols-[2fr_2fr_1fr_1fr] text-gray-500 items-center text-sm md:text-base font-medium pt-3"
           >
             <div className="flex items-center md:gap-6 gap-3">
@@ -64,10 +77,7 @@ const Cart = () => {
               <button
                 className="border px-2 rounded-l-md transition-all hover:scale-110 duration-200 ease-in"
                 onClick={() =>
-                  handleQuantityChange(
-                    item.product._id,
-                    Math.max(1, item.quantity - 1)
-                  )
+                  handleQuantityChange(item.product._id, item.quantity - 1)
                 }
               >
                 -
@@ -76,22 +86,20 @@ const Cart = () => {
               <button
                 className="border px-2 rounded-r-md transition-all hover:scale-110 duration-200 ease-in"
                 onClick={() =>
-                  handleQuantityChange(
-                    item.product._id,
-                    Math.max(1, item.quantity + 1)
-                  )
+                  handleQuantityChange(item.product._id, item.quantity + 1)
                 }
               >
                 +
               </button>
             </div>
             <p className="text-center">
-              {item.quantity * item.product.productPrice}
+              {(item.quantity || 0) * (item.product.productPrice || 0)}
             </p>
 
             <button
               title="btn"
               className="cursor-pointer mx-auto transition-all hover:scale-125 duration-150 ease-in"
+              onClick={() => handleItemDelete(item.product._id)}
             >
               <svg
                 width="20"

@@ -13,14 +13,8 @@ const Navbar = () => {
   const [, setScrollY] = useState(0);
   const [onscroll, setOnscroll] = useState(false);
   const dispatch = useDispatch();
-  const { cart } = useAppSelector((state) => state.cart);
-
-  // // fetch user cart items on first render
-  // useEffect(() => {
-  //   if (token && !loginError) {
-  //     appDispatch(getCartItems());
-  //   }
-  // }, [token, appDispatch, loginError]);
+  const { cartItems } = useAppSelector((state) => state.cart);
+  const cartArray = Array.isArray(cartItems) ? cartItems : [];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -92,9 +86,9 @@ const Navbar = () => {
                   />
                 </Link>
 
-                {cart.length !== 0 && (
+                {cartArray.length > 0 && (
                   <span className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center rounded-full bg-red-600 text-white text-xs">
-                    {cart.length}
+                    {cartArray.length}
                   </span>
                 )}
               </button>
