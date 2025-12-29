@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { APIAuthenticated } from "./../http/index";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
@@ -19,6 +20,8 @@ type stateType = {
   data: orderType[];
   error: string | null;
   loading: boolean;
+  success: boolean;
+  message: string | null;
 };
 
 export type orderDetailType = {
@@ -34,25 +37,29 @@ export type orderDetailType = {
   };
 };
 
-
 const initialState: stateType = {
   data: [],
   error: null,
   loading: false,
+  success: false,
+  message: null,
 };
 
-export const createOrder = createAsyncThunk<orderType[], orderDetailType>(
-  "checkoutSlice/createOrder",
-  async (orderDetails, thunkAPI) => {
-    try {
-      const response = await APIAuthenticated.post("order", orderDetails);
+export const createOrder = createAsyncThunk<
+  orderType[],
+  orderDetailType,
+  { rejectValue: string }
+>("checkoutSlice/createOrder", async (orderDetails, thunkAPI) => {
+  try {
+    const response = await APIAuthenticated.post("order", orderDetails);
 
-      return response.data.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
+    return response.data.data;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || "Order failed"
+    );
   }
-);
+});
 export const checkoutSlice = createSlice({
   name: "checkout",
   initialState,
@@ -62,14 +69,21 @@ export const checkoutSlice = createSlice({
       .addCase(createOrder.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.success = false;
+        state.message = null;
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.loading = false;
+        state.success = true;
         state.data = action.payload;
+        state.message = "Order placed successfully";
       })
-      .addCase(createOrder.rejected, (state) => {
+      .addCase(createOrder.rejected, (state, action) => {
         state.loading = false;
-        state.error = "Something went wrong";
+        state.success = false;
+        state.error = action.payload || "Something went wrong";
       });
   },
 });
+
+export default checkoutSlice.reducer;
