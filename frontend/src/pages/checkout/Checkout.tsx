@@ -69,6 +69,11 @@ const Checkout = () => {
     }
   }, [data, success, error]);
 
+  // initiate khalti payment 
+  const handleKhaltiPayment=()=>{
+    
+  }
+
   return (
     <>
       <div className="pt-20 flex flex-col items-center border-b bg-white py-4 sm:flex-row sm:px-10 lg:px-20 xl:px-32">
@@ -323,12 +328,21 @@ const Checkout = () => {
                 ${totalAmount}
               </p>
             </div>
-            <button
-              className="mt-4 mb-8 w-full rounded-md bg-amber-500 transition-all hover:scale-105 duration-300 hover:bg-amber-600 px-6 py-3 font-medium text-white"
-              type="submit"
-            >
-              {loading ? <p>Please wait .... </p> : <p>Place Order</p>}
-            </button>
+            {paymentMethod === "COD" ? (
+              <button
+                className="mt-4 mb-8 w-full rounded-md bg-amber-500 transition-all hover:scale-105 duration-300 hover:bg-amber-600 px-6 py-3 font-medium text-white"
+                type="submit"
+              >
+                {loading ? <p>Please wait .... </p> : <p>Place Order</p>}
+              </button>
+            ) : (
+              <button
+                className="mt-4 mb-8 w-full rounded-md bg-purple-700 transition-all hover:scale-105 duration-300 hover:bg-purple-600 px-6 py-3 font-medium text-white"
+                type="submit"
+              >
+                {loading ? <p>Please wait .... </p> : <p>Pay with Khalti</p>}
+              </button>
+            )}
           </form>
         </div>
       </div>

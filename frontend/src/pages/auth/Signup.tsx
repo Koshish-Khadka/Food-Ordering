@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const dispatch = useAppDispatch();
-  const { loading, error, data } = useAppSelector((state) => state.auth);
+  const { loading, error } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
 
   const [input, setInput] = useState({
@@ -24,13 +24,15 @@ const Signup = () => {
     e.preventDefault();
     dispatch(registerUser(input));
   };
-  
+
   useEffect(() => {
-    if (data) {
+    if (!error) {
       alert("User registered successfully");
       navigate("/login");
+    } else {
+      alert("Failed to register user");
     }
-  }, [data, navigate]);
+  }, [error, navigate, dispatch]);
 
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -108,7 +110,7 @@ const Signup = () => {
           )}
 
           {/* Success message */}
-          {data && !error && (
+          {!error && (
             <p className="text-green-500 text-sm mt-2 text-center">
               Registration successful!
             </p>

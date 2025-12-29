@@ -14,6 +14,33 @@ type LoginDataType = {
   email: string;
   password: string;
 };
+type UserDataType = {
+  user: string;
+  email: string;
+  phoneNumber: number;
+  role: string;
+};
+
+type stateType = {
+  loading: boolean;
+  error: string | null;
+  success: string;
+  token: string;
+  loginUserData: UserDataType | null;
+  loginLoading: boolean;
+  loginError: string | null;
+};
+
+const initialState: stateType = {
+  loading: false,
+  error: null,
+  success: "",
+  // token: "",
+  token: localStorage.getItem("token") || "",
+  loginUserData: null,
+  loginLoading: false,
+  loginError: null,
+};
 
 export const registerUser = createAsyncThunk<
   any, // return type (API response)
@@ -43,14 +70,7 @@ export const loginUser = createAsyncThunk<
 
 export const authSlice = createSlice({
   name: "auth",
-  initialState: {
-    loading: false,
-    error: null as string | null,
-    token: localStorage.getItem("token") || "",
-    loginUserData: null,
-    loginLoading: false,
-    loginError: null as string | null,
-  },
+  initialState,
   reducers: {
     logout: (state) => {
       state.token = "";

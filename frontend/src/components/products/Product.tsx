@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Productcard from "../productCard/Productcard";
-import { fetchProducts } from "../../store/productSlice";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { useAppSelector } from "../../store/hooks";
 
 type categroy = "breakfast" | "maincourse" | "drinks";
 export type productType = {
@@ -15,13 +14,8 @@ export type productType = {
 };
 
 const Product = () => {
-  const dispatch = useAppDispatch();
   const { data, loading, error } = useAppSelector((state) => state.product);
   const [isActivemenu, setIsActiveMenu] = useState("breakfast");
-
-  useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
 
   const handleOptions = (data: categroy) => {
     setIsActiveMenu(data);

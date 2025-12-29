@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { loginUser } from "../../store/authSlice";
-import { useNavigate } from "react-router-dom";
-
 
 const Login = () => {
   const dispatch = useAppDispatch();
@@ -10,7 +8,6 @@ const Login = () => {
     (state) => state.auth
   );
 
-  const navigate = useNavigate();
   const [input, setInput] = useState({
     email: "",
     password: "",
@@ -23,15 +20,17 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(loginUser(input));
+    // dispatch(loginUser(input));
 
+    dispatch(loginUser(input));
   };
 
   useEffect(() => {
-    if (token && !loginError) {
-      navigate("/");
+    if (!loginError && token) {
+      window.location.href = "/";
     }
-  }, [token, navigate, loginError]);
+  }, [token, window]);
+
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="border border-gray-300 p-8 rounded-lg shadow-lg w-full max-w-sm">

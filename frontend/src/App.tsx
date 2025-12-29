@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { useEffect } from "react";
 import { fetchUserCart } from "./store/cartSlice";
 import Checkout from "./pages/checkout/Checkout";
+import { fetchProducts } from "./store/productSlice";
 
 const Layout = () => {
   const location = useLocation();
@@ -27,6 +28,10 @@ const Layout = () => {
       dispatch(fetchUserCart());
     }
   }, [token, dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
   return (
     <>

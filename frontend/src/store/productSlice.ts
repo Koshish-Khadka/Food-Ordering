@@ -52,8 +52,10 @@ export const fetchProducts = createAsyncThunk<
     const response = await API.get("products/getAllProducts");
     return response.data.data;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (error) {
-    return thunkAPI.rejectWithValue("Failed to fetch products");
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || error.message || "Something went wrong"
+    );
   }
 });
 
@@ -69,8 +71,10 @@ export const fetchSingleProduct = createAsyncThunk<
       product: response.data.data.product,
       reviews: response.data.data.productReviews,
     };
-  } catch {
-    return thunkAPI.rejectWithValue("Failed to fetch product");
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || error.message || "Something went wrong"
+    );
   }
 });
 

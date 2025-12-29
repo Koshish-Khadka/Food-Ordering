@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   createAsyncThunk,
@@ -34,8 +35,10 @@ export const addToCart = createAsyncThunk<cartItemsType[], string>(
     try {
       const response = await APIAuthenticated.post(`/cart/${productId}`);
       return response.data.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || "Something went wrong"
+      );
     }
   }
 );
@@ -46,8 +49,10 @@ export const fetchUserCart = createAsyncThunk<cartItemsType[], void>(
     try {
       const response = await APIAuthenticated.get("/cart/getCartItems");
       return response.data.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || "Something went wrong"
+      );
     }
   }
 );
@@ -59,8 +64,10 @@ export const updateCartItems = createAsyncThunk<
   try {
     await APIAuthenticated.patch(`/cart/${productId}`, { quantity });
     return { productId, quantity };
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error);
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || error.message || "Something went wrong"
+    );
   }
 });
 
@@ -70,8 +77,10 @@ export const deleteCartItem = createAsyncThunk<{ productId: string }, string>(
     try {
       await APIAuthenticated.delete(`/cart/${productId}`);
       return { productId };
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || "Something went wrong"
+      );
     }
   }
 );
