@@ -2,12 +2,14 @@ import Order from "../../../models/orderModel.js";
 
 export const createOrder = async (req, res) => {
   const userId = req.user.id;
-  const { shippingAddress, items, totalAmount, paymentDetails } = req.body;
+  const { shippingAddress, items, totalAmount, paymentDetails, phoneNumber } =
+    req.body;
   if (
     !shippingAddress ||
     !items.length === 0 ||
     !totalAmount ||
-    !paymentDetails
+    !paymentDetails ||
+    !phoneNumber
   ) {
     return res.status(400).json({
       message:
@@ -21,6 +23,7 @@ export const createOrder = async (req, res) => {
     totalAmount,
     shippingAddress,
     paymentDetails,
+    phoneNumber,
   });
   if (!userOrder) {
     res.status(400).json({ message: "Failed to create order" });
@@ -68,7 +71,6 @@ export const deleteOrder = async (req, res) => {
 
   res.status(200).json({ message: "Order deleted successfully" });
 };
-
 
 export const updateMyOrder = async (req, res) => {
   const { id } = req.params;

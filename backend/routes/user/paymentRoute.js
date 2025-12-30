@@ -8,6 +8,8 @@ import { catchAsync } from "../../services/catchAsync.js";
 const router = express.Router();
 
 router.route("/").post(isAuthenticated, catchAsync(initiateKhaltiPayment));
-router.route("/success").get(catchAsync(verifyKhaltiPayment));
+router
+  .route("/verifypidx")
+  .post(isAuthenticated, catchAsync(verifyKhaltiPayment));
 
 export default router;

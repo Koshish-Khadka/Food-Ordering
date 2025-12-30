@@ -23,6 +23,10 @@ const orderSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    phoneNumber: {
+      type: Number,
+      required: true,
+    },
     orderStatus: {
       type: String,
       enum: ["pending", "delivered", "cancelled", "ontheway", "preparation"],

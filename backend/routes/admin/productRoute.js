@@ -22,8 +22,8 @@ router.post(
 router.get("/getAllProducts", catchAsync(getAllProducts));
 router.get(
   "/:productID",
-  isAuthenticated,
-  isValidRole("admin"),
+  // isAuthenticated,
+  // isValidRole("admin"),
   catchAsync(getProductbyID)
 );
 router.patch(
