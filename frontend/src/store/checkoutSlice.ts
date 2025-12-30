@@ -3,6 +3,7 @@ import { APIAuthenticated } from "./../http/index";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export type orderType = {
+  _id: string;
   user: string;
   items: {
     quantity: number;
@@ -17,7 +18,8 @@ export type orderType = {
 };
 
 type stateType = {
-  data: orderType[];
+  // data: orderType[];
+  data: orderType | null;
   error: string | null;
   loading: boolean;
   success: boolean;
@@ -38,7 +40,8 @@ export type orderDetailType = {
 };
 
 const initialState: stateType = {
-  data: [],
+  // data: [],
+  data: null,
   error: null,
   loading: false,
   success: false,
@@ -46,14 +49,16 @@ const initialState: stateType = {
 };
 
 export const createOrder = createAsyncThunk<
-  orderType[],
+  // orderType[],
+  orderType,
   orderDetailType,
   { rejectValue: string }
 >("checkoutSlice/createOrder", async (orderDetails, thunkAPI) => {
   try {
     const response = await APIAuthenticated.post("order", orderDetails);
 
-    return response.data.data;
+    // return response.data.data;
+    return response.data.data; // single order
   } catch (error: any) {
     return thunkAPI.rejectWithValue(
       error.response?.data?.message || "Order failed"

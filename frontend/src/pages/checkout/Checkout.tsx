@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useForm } from "react-hook-form";
 import { createOrder, type orderDetailType } from "../../store/checkoutSlice";
 import { useNavigate } from "react-router-dom";
+import { APIAuthenticated } from "../../http";
 
 type formData = {
   shippingAddress: string;
@@ -54,25 +55,44 @@ const Checkout = () => {
     dispatch(createOrder(orderDetails));
   };
 
+
+
+  // initiate khalti payment
+
+  console.log("Checkout data", data);
   useEffect(() => {
-    if (paymentMethod === "COD" && success) {
-      alert(" Order placed successfully");
+    if (!success || !data) return;
+
+    if (paymentMethod === "COD") {
+      alert("Order placed successfully");
       navigate("/");
       return;
     }
-    if (paymentMethod === "Khalti" && success) {
-      navigate("/khalti");
-      return;
-    }
-    if (error) {
-      alert(` ${error}`);
-    }
-  }, [data, success, error]);
 
-  // initiate khalti payment 
-  const handleKhaltiPayment=()=>{
-    
-  }
+    if (paymentMethod === "Khalti") {
+      // const lastOrder = data[data.length - 1];
+      // handleKhaltiPayment(lastOrder._id, lastOrder.totalAmount);
+      handleKhaltiPayment(data._id, data.totalAmount);
+    }
+
+    if (error) {
+      alert(error);
+    }
+  }, [success, data, error, paymentMethod]);
+
+  const handleKhaltiPayment = async (orderId: string, totalAmount: number) => {
+    try {
+      const response = await APIAuthenticated.post("/payment", {
+        orderId,
+        amount: totalAmount,
+      });
+      if (response.status === 200) {
+        window.location.href = response.data.paymentUrl;
+      }
+    } catch (error) {
+      console.log("Failed to proceed to payment", error);
+    }
+  };
 
   return (
     <>
