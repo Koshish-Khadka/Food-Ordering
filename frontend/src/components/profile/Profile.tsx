@@ -1,28 +1,41 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchuserOrder } from "../../store/checkoutSlice";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../../store/authSlice";
 
 const Profile = () => {
   const dispatch = useAppDispatch();
   const { orderData } = useAppSelector((state) => state.checkout);
+  const [selectedvalue, setSelectedValue] = useState("");
+  const navigate = useNavigate();
+
   useEffect(() => {
     dispatch(fetchuserOrder());
-  }, []);
+  }, [dispatch]);
+
   const [input, setInput] = useState("");
 
-  // const searchOrder = orderData.map((order) =>
-  //   order.items.filter((product) =>
-  //     input.toLowerCase().includes(product.product.productName)
-  //   )
-  // );
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
 
-  const filterOrders = orderData
+  const filteredOrders = orderData
+    //  Filter by order status (dropdown)
+    .filter((order) =>
+      selectedvalue ? order.orderStatus === selectedvalue : true
+    )
+
+    // Filter items by product name (search)
     .map((order) => ({
       ...order,
-      items: order.items.filter((items) =>
-        items.product.productName.toLowerCase().includes(input.toLowerCase())
+      items: order.items.filter((item) =>
+        item.product.productName.toLowerCase().includes(input.toLowerCase())
       ),
     }))
+
+    //  Remove orders with no matching items
     .filter((order) => order.items.length > 0);
 
   return (
@@ -43,8 +56,11 @@ const Profile = () => {
             <p className="text-gray-500 text-sm">kelvin.john@gmail.com</p>
             <p className="text-gray-500 text-sm">9843023686</p>
 
-            <button className="border text-sm text-gray-500 border-gray-200 hover:bg-gray-100 transition cursor-pointer px-6 py-1 rounded-full mt-5">
-              <p className="mb-1">message</p>
+            <button
+              className="mt-4 rounded-xl bg-amber-500 px-4 py-2 text-sm font-medium text-white sm:text-base transition-all hover:scale-105 duration-150 ease-in-out"
+              onClick={() => handleLogout()}
+            >
+              Logout
             </button>
           </div>
         </div>
@@ -57,8 +73,8 @@ const Profile = () => {
               <h2 className="text-gray-600 font-semibold">Products Oder</h2>
               <span className="text-xs">All products item</span>
             </div>
-            <div className="flex items-center justify-between">
-              <div className="flex bg-gray-50 items-center p-2 rounded-md">
+            <div className="flex gap-x-4 items-center justify-between">
+              <div className="flex bg-gray-50 items-center p-2 rounded-md border border-gray-200">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5 text-gray-400"
@@ -80,6 +96,23 @@ const Profile = () => {
                   placeholder="search..."
                 />
               </div>
+              <div>
+                <label htmlFor="filer">Filter by : </label>
+                <select
+                  title="filter"
+                  name="filter"
+                  id="filter"
+                  className="p-2 rounded-md bg-gray-50 border border-gray-200"
+                  onChange={(e) => setSelectedValue(e.target.value)}
+                >
+                  <option value="">Choose</option>
+                  <option value="pending">pending</option>
+                  <option value="delivered">delivered</option>
+                  <option value="cancelled">cancelled</option>
+                  <option value="ontheway">ontheway</option>
+                  <option value="preparation">preparation</option>
+                </select>
+              </div>
             </div>
           </div>
           <div>
@@ -98,7 +131,7 @@ const Profile = () => {
                         Created at
                       </th>
                       <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        QRT
+                        Amount
                       </th>
                       <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                         Status
@@ -106,63 +139,66 @@ const Profile = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filterOrders.map((order) =>
-                      order.items.map((item) => (
-                        <tr key={item.product._id}>
-                          {/* Product info */}
-                          <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <div className="flex items-center">
-                              <div className="flex-shrink-0 w-10 h-10">
-                                <img
-                                  className="w-full h-full rounded-full object-cover"
-                                  src={item.product.productImage}
-                                  alt={item.product.productName}
-                                />
-                              </div>
-                              <div className="ml-3">
-                                <p className="text-gray-900 whitespace-no-wrap">
-                                  {item.product.productName}
-                                </p>
-                              </div>
+                    {filteredOrders.map((order) => (
+                      <tr
+                        key={order._id}
+                        className="transition-colors duration-150 hover:bg-gray-600 cursor-pointer"
+                        onClick={() => navigate(`/profile/order/${order._id}`)}
+                      >
+                        {/* Product info */}
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                          <div className="flex items-center">
+                            <div className="ml-3">
+                              <p className="text-blue-900 underline whitespace-no-wrap">
+                                {order._id}
+                              </p>
                             </div>
-                          </td>
+                          </div>
+                        </td>
 
-                          {/* Quantity */}
-                          <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <p className="text-gray-900 whitespace-no-wrap">
-                              {item.quantity}
-                            </p>
-                          </td>
+                        {/* Quantity */}
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                          <p className="text-gray-900 whitespace-no-wrap">
+                            {order.totalAmount}
+                          </p>
+                        </td>
 
-                          {/* Created At */}
-                          <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <p className="text-gray-900 whitespace-no-wrap">
-                              {new Date(order.createdAt).toLocaleDateString()}
-                            </p>
-                          </td>
+                        {/* Created At */}
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                          <p className="text-gray-900 whitespace-no-wrap">
+                            {new Date(order.createdAt).toLocaleDateString()}
+                          </p>
+                        </td>
 
-                          {/* Payment Method */}
-                          <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <p className="text-gray-900 whitespace-no-wrap">
-                              {order.paymentDetails.method}
-                            </p>
-                          </td>
+                        {/* Payment Method */}
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                          <p className="text-gray-900 whitespace-no-wrap">
+                            {order.paymentDetails.method}
+                          </p>
+                        </td>
 
-                          {/* Order Status */}
-                          <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <span className="relative inline-block px-3 py-1 font-semibold text-yellow-900 leading-tight">
-                              <span
-                                aria-hidden
-                                className="absolute inset-0 bg-yellow-200 opacity-50 rounded-full"
-                              ></span>
-                              <span className="relative">
-                                {order.orderStatus}
-                              </span>
+                        {/* Order Status */}
+                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                          <span className="relative inline-block px-3 py-1 font-semibold text-yellow-900 leading-tight">
+                            <span
+                              aria-hidden
+                              className={`absolute inset-0 opacity-50 rounded-full ${
+                                order.orderStatus === "pending"
+                                  ? "bg-yellow-500"
+                                  : order.orderStatus === "cancelled"
+                                  ? "bg-red-500"
+                                  : order.orderStatus === "delivered"
+                                  ? "bg-green-500"
+                                  : "bg-blue-500"
+                              }`}
+                            ></span>
+                            <span className="relative">
+                              {order.orderStatus}
                             </span>
-                          </td>
-                        </tr>
-                      ))
-                    )}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>

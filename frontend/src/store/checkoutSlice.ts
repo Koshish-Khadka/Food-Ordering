@@ -100,6 +100,7 @@ export const fetchuserOrder = createAsyncThunk<
     );
   }
 });
+
 export const checkoutSlice = createSlice({
   name: "checkout",
   initialState,

@@ -2,17 +2,15 @@
 import { useEffect, useState } from "react";
 import image from "../../assets/hotdog.png";
 import { ShoppingBasket } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import { useAppSelector } from "../../store/hooks";
-import { logout } from "../../store/authSlice";
 
 const Navbar = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { loginUserData } = useAppSelector((state) => state.auth);
   const [, setScrollY] = useState(0);
   const [onscroll, setOnscroll] = useState(false);
-  const dispatch = useDispatch();
+
   const { cartItems } = useAppSelector((state) => state.cart);
   const cartArray = Array.isArray(cartItems) ? cartItems : [];
 
@@ -33,12 +31,6 @@ const Navbar = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [onscroll]);
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/");
-  };
 
   return (
     <nav
@@ -96,13 +88,6 @@ const Navbar = () => {
                   Profile
                 </button>
               </Link>
-
-              <button
-                className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-medium text-white sm:text-base transition-all hover:scale-105 duration-150 ease-in-out"
-                onClick={() => handleLogout()}
-              >
-                Logout
-              </button>
             </div>
           )}
         </div>

@@ -14,6 +14,7 @@ import Checkout from "./pages/checkout/Checkout";
 import { fetchProducts } from "./store/productSlice";
 import Khaltisuccess from "./pages/checkout/Khaltisuccess";
 import Profile from "./components/profile/Profile";
+import OrderDetail from "./components/profile/OrderDetail";
 
 const Layout = () => {
   const location = useLocation();
@@ -48,6 +49,7 @@ const Layout = () => {
         <Route path="/order/checkout" element={<Checkout />} />
         <Route path="/success" element={<Khaltisuccess />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/order/:orderId" element={<OrderDetail />} />
       </Routes>
     </>
   );

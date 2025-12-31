@@ -55,7 +55,6 @@ const Checkout = () => {
 
   // initiate khalti payment
 
-  console.log("Checkout data", data);
   useEffect(() => {
     if (!success || !data) return;
 
