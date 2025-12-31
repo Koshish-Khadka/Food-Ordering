@@ -77,21 +77,26 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="flex items-center gap-4">
-              <button title="shop" type="button" className="p-2 relative">
-                <Link to="/cart">
-                  <ShoppingBasket
-                    className="h-6 w-6 "
-                    // color={onscroll ? "black" : "white"}
-                    color="black"
-                  />
-                </Link>
-
-                {cartArray.length > 0 && (
+              {cartArray.length > 0 && (
+                <button title="shop" type="button" className="p-2 relative">
+                  <Link to="/cart">
+                    <ShoppingBasket
+                      className="h-6 w-6 "
+                      // color={onscroll ? "black" : "white"}
+                      color="green"
+                    />
+                  </Link>
                   <span className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center rounded-full bg-red-600 text-white text-xs">
                     {cartArray.length}
                   </span>
-                )}
-              </button>
+                </button>
+              )}
+              <Link to={"/profile"}>
+                <button className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-medium text-white sm:text-base transition-all hover:scale-105 duration-150 ease-in-out">
+                  Profile
+                </button>
+              </Link>
+
               <button
                 className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-medium text-white sm:text-base transition-all hover:scale-105 duration-150 ease-in-out"
                 onClick={() => handleLogout()}

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useForm } from "react-hook-form";
 import { createOrder, type orderDetailType } from "../../store/checkoutSlice";
-import { useNavigate } from "react-router-dom";
 import { APIAuthenticated } from "../../http";
 
 type formData = {
@@ -13,7 +12,6 @@ type formData = {
 const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const { cartItems } = useAppSelector((state) => state.cart);
-  const navigate = useNavigate();
 
   const cart = Array.isArray(cartItems) ? cartItems : [];
   const dispatch = useAppDispatch();
@@ -55,8 +53,6 @@ const Checkout = () => {
     dispatch(createOrder(orderDetails));
   };
 
-
-
   // initiate khalti payment
 
   console.log("Checkout data", data);
@@ -65,7 +61,7 @@ const Checkout = () => {
 
     if (paymentMethod === "COD") {
       alert("Order placed successfully");
-      navigate("/");
+      window.location.href = "/";
       return;
     }
 
