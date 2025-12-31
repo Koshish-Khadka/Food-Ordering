@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchuserOrder } from "../../store/checkoutSlice";
 
@@ -8,6 +8,22 @@ const Profile = () => {
   useEffect(() => {
     dispatch(fetchuserOrder());
   }, []);
+  const [input, setInput] = useState("");
+
+  // const searchOrder = orderData.map((order) =>
+  //   order.items.filter((product) =>
+  //     input.toLowerCase().includes(product.product.productName)
+  //   )
+  // );
+
+  const filterOrders = orderData
+    .map((order) => ({
+      ...order,
+      items: order.items.filter((items) =>
+        items.product.productName.toLowerCase().includes(input.toLowerCase())
+      ),
+    }))
+    .filter((order) => order.items.length > 0);
 
   return (
     <div className="pt-20 max-w-6xl m-auto">
@@ -58,8 +74,9 @@ const Profile = () => {
                 <input
                   className="bg-gray-50 outline-none ml-1 block "
                   type="text"
-                  name=""
-                  id=""
+                  name="search"
+                  id="search"
+                  onChange={(e) => setInput(e.target.value)}
                   placeholder="search..."
                 />
               </div>
@@ -89,7 +106,7 @@ const Profile = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {orderData.map((order) =>
+                    {filterOrders.map((order) =>
                       order.items.map((item) => (
                         <tr key={item.product._id}>
                           {/* Product info */}
