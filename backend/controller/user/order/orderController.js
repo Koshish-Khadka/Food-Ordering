@@ -1,4 +1,5 @@
 import Order from "../../../models/orderModel.js";
+import User from "../../../models/userModel.js";
 
 export const createOrder = async (req, res) => {
   const userId = req.user.id;
@@ -25,13 +26,12 @@ export const createOrder = async (req, res) => {
     paymentDetails,
     phoneNumber,
   });
-  if (!userOrder) {
-    res.status(400).json({ message: "Failed to create order" });
-  } else {
-    res
-      .status(200)
-      .json({ message: "Order created successfully", data: userOrder });
-  }
+  const user = await User.findById(userId);
+  user.cart = [];
+  await user.save();
+  res
+    .status(200)
+    .json({ message: "Order created successfully", data: userOrder });
 };
 
 export const getUserOrder = async (req, res) => {
@@ -45,6 +45,7 @@ export const getUserOrder = async (req, res) => {
 
   res.status(200).json({ data: userOrders });
 };
+
 
 export const deleteOrder = async (req, res) => {
   const orderId = req.params.id;

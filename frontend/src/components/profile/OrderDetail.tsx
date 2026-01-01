@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchuserOrder } from "../../store/checkoutSlice";
 import { APIAuthenticated } from "../../http";
+import UpdateOrder from "./UpdateOrder";
 
 const OrderDetail = () => {
   const { orderId } = useParams();
   const dispatch = useAppDispatch();
   const { orderData, loading } = useAppSelector((state) => state.checkout);
+  const [ismodelopen, setIsModalOpen] = useState(false);
   useEffect(() => {
     if (!orderData.length) {
       dispatch(fetchuserOrder());
@@ -17,6 +19,7 @@ const OrderDetail = () => {
 
   //   const [data] = orderData.filter((item) => item._id === orderId);
   const data = orderData.find((item) => item._id === orderId);
+  const navigate = useNavigate();
 
   if (loading || !data) {
     return <p className="text-center mt-20">Loading order...</p>;
@@ -28,6 +31,7 @@ const OrderDetail = () => {
       const response = await APIAuthenticated.patch(`/order/cancel/${orderId}`);
       alert(response.data.message);
       dispatch(fetchuserOrder());
+      navigate("/profile");
     } catch (error: any) {
       if (error.response) {
         alert(error.response.data.message);
@@ -36,6 +40,33 @@ const OrderDetail = () => {
       }
     }
   };
+
+  const deleteOrder = async (orderId?: string) => {
+    try {
+      const response = await APIAuthenticated.delete(`order/${orderId}`);
+      alert(response.data.message);
+      dispatch(fetchuserOrder());
+      navigate("/profile");
+    } catch (error: any) {
+      if (error.response) {
+        alert(error.response.message);
+      } else {
+        alert("Something went wrong");
+      }
+    }
+  };
+
+  // const updateOrder = async (orderId?: string) => {
+  //   try {
+  //     const response = await APIAuthenticated.patch(`/order/${orderId}`);
+  //   } catch (error: any) {
+  //     if (error.response.message) {
+  //       alert(error.response.message);
+  //     } else {
+  //       alert("Something went wrong");
+  //     }
+  //   }
+  // };
 
   return (
     <div className="py-14 px-4 md:px-6 2xl:px-20 2xl:container 2xl:mx-auto">
@@ -162,22 +193,46 @@ const OrderDetail = () => {
                 </div>
               </div>
 
-              <div className="mt-6 flex w-full justify-center gap-x-4 items-center md:justify-start md:items-start">
-                <button className="mt-6 md:mt-0 py-5 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 border border-gray-800 font-medium w-96 2xl:w-full text-base leading-4 text-gray-800">
-                  Edit Order
-                </button>
+              <div className="mt-8 flex flex-col gap-4 w-full">
+                {/* Cancel Order */}
                 <button
-                  className="mt-6 md:mt-0 py-5 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 border border-gray-800 font-medium w-96 2xl:w-full text-base leading-4 text-gray-800"
-                  disabled={data.orderStatus === "cancelled"}
                   onClick={() => cancelOrder(data._id)}
+                  disabled={data.orderStatus === "cancelled"}
+                  className={`w-full py-3 rounded-md border text-sm font-semibold transition-all
+      ${
+        data.orderStatus === "cancelled"
+          ? "cursor-not-allowed bg-gray-200 text-gray-500 border-gray-300"
+          : "border-red-500 text-red-600 hover:bg-red-50 focus:ring-2 focus:ring-red-500"
+      }`}
                 >
                   Cancel Order
+                </button>
+
+                {/* Delete Order */}
+                <button
+                  className="w-full py-3 rounded-md bg-red-600 text-white text-sm font-semibold
+               hover:bg-red-700 transition-all
+               focus:ring-2 focus:ring-red-500"
+                  onClick={() => deleteOrder(data._id)}
+                >
+                  Delete Order
+                </button>
+
+                {/* Edit Order */}
+                <button
+                  className="w-full py-3 rounded-md bg-blue-600 text-white text-sm font-semibold
+               hover:bg-blue-700 transition-all
+               focus:ring-2 focus:ring-blue-500"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  Edit Order
                 </button>
               </div>
             </div>
           </div>
         </div>
       </div>
+      {ismodelopen && <UpdateOrder onClose={() => setIsModalOpen(false)} />}
     </div>
   );
 };
