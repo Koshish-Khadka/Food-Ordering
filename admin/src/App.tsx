@@ -6,22 +6,26 @@ import Order from "./pages/admin/Order";
 import Users from "./pages/admin/Users";
 import Reviews from "./pages/admin/Reviews";
 import AdminLayout from "./pages/admin/AdminDash";
+import store from "./store/store";
+import { Provider } from "react-redux";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="admin" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="orders" element={<Order />} />
-            <Route path="users" element={<Users />} />
-            <Route path="reviews" element={<Reviews />} />
+    <Provider store={store}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="admin" element={<AdminLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="orders" element={<Order />} />
+              <Route path="users" element={<Users />} />
+              <Route path="reviews" element={<Reviews />} />
+            </Route>
           </Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </Provider>
   );
 }
 

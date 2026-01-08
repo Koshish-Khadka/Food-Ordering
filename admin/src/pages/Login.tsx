@@ -1,7 +1,42 @@
+import { useForm } from "react-hook-form";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { loginUser } from "../store/slice/authSlice";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+type formData = {
+  email: string;
+  password: string;
+};
+
 export default function Login() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<formData>();
+  const { loginError, loginLoading, loginUserData } = useAppSelector(
+    (state) => state.auth
+  );
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const onSubmit = (data: formData) => {
+    dispatch(loginUser(data));
+  };
+  useEffect(() => {
+    if (!loginError && loginUserData) {
+      navigate("/admin");
+    }
+    if (loginError) {
+      return alert(loginError);
+    }
+  }, [dispatch, loginUserData]);
   return (
     <main className="mt-20 flex items-center justify-center w-full px-4">
-      <form className="flex w-full flex-col max-w-96">
+      <form
+        className="flex w-full flex-col max-w-96"
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+      >
         <a
           href="https://prebuiltui.com"
           className="mb-8"
@@ -38,8 +73,13 @@ export default function Login() {
             className="mt-2 rounded-md ring ring-gray-200 focus:ring-2 focus:ring-indigo-600 outline-none px-3 py-3 w-full"
             required
             type="email"
-            name="email"
+            {...register("email", {
+              required: "email is required",
+            })}
           />
+          {errors.email && (
+            <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
+          )}
         </div>
 
         <div className="mt-6">
@@ -49,13 +89,21 @@ export default function Login() {
             className="mt-2 rounded-md ring ring-gray-200 focus:ring-2 focus:ring-indigo-600 outline-none px-3 py-3 w-full"
             required
             type="password"
-            name="password"
+            {...register("password", {
+              required: "password is required",
+            })}
           />
+          {errors.password && (
+            <p className="text-red-600 text-sm mt-1">
+              {errors.password.message}
+            </p>
+          )}
         </div>
 
         <button
           type="submit"
           className="mt-8 py-3 w-full cursor-pointer rounded-md bg-indigo-600 text-white transition hover:bg-indigo-700"
+          disabled={loginLoading}
         >
           Login
         </button>
