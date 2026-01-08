@@ -15,6 +15,9 @@ import { fetchProducts } from "./store/productSlice";
 import Khaltisuccess from "./pages/checkout/Khaltisuccess";
 import Profile from "./components/profile/Profile";
 import OrderDetail from "./components/profile/OrderDetail";
+import { getUserProfile } from "./store/authSlice";
+import ProtectedRoute from "./pages/ProtectedRoute";
+import Admin from "./pages/Admin";
 
 const Layout = () => {
   const location = useLocation();
@@ -29,6 +32,7 @@ const Layout = () => {
   useEffect(() => {
     if (token) {
       dispatch(fetchUserCart());
+      dispatch(getUserProfile());
     }
   }, [token, dispatch]);
 
@@ -50,6 +54,9 @@ const Layout = () => {
         <Route path="/success" element={<Khaltisuccess />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/order/:orderId" element={<OrderDetail />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/admin" element={<Admin />} />
+        </Route>
       </Routes>
     </>
   );

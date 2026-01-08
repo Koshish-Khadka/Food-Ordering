@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { loginUser } from "../../store/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { token, loginError, loginLoading } = useAppSelector(
     (state) => state.auth
   );
@@ -30,6 +32,11 @@ const Login = () => {
       window.location.href = "/";
     }
   }, [token, window]);
+
+  if (token) {
+    navigate("/");
+    return;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center">

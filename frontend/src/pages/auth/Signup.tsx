@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const dispatch = useAppDispatch();
-  const { loading, error } = useAppSelector((state) => state.auth);
+  const { loading, error, token } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
 
   const [input, setInput] = useState({
@@ -33,6 +33,11 @@ const Signup = () => {
       alert("Failed to register user");
     }
   }, [error, navigate, dispatch]);
+
+  if (token) {
+    navigate("/");
+    return;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center">
