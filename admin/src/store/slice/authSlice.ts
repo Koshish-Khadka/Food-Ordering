@@ -24,7 +24,6 @@ type stateType = {
 
 const initialState: stateType = {
   success: "",
-  // token: "",
   token: localStorage.getItem("token") || "",
   loginUserData: null,
   loginLoading: false,
@@ -42,17 +41,16 @@ export const loginUser = createAsyncThunk<
   } catch (error: any) {
     const message =
       error.response?.data?.message || "Unable to login. Please try again.";
-
     return thunkAPI.rejectWithValue(message);
     // return thunkAPI.rejectWithValue("Something went wrong");
   }
 });
 
-export const getUserProfile = createAsyncThunk<
+export const fetchProfile = createAsyncThunk<
   any,
   void,
   { rejectValue: string }
->("auth/getUserProfile", async (_, thunkAPI) => {
+>("auth/fetchProfile", async (_, thunkAPI) => {
   try {
     const response = await APIAuthenticated.get(`/profile`);
     // console.log(response.data.data);
@@ -76,7 +74,6 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-
       // Login
       .addCase(loginUser.pending, (state) => {
         state.loginLoading = true;
@@ -93,15 +90,15 @@ export const authSlice = createSlice({
         state.loginError = action.payload || "Something went wrong";
       })
       // user profile
-      .addCase(getUserProfile.pending, (state) => {
+      .addCase(fetchProfile.pending, (state) => {
         state.loginLoading = true;
         state.loginError = null;
       })
-      .addCase(getUserProfile.fulfilled, (state, action) => {
+      .addCase(fetchProfile.fulfilled, (state, action) => {
         state.loginLoading = false;
         state.loginUserData = action.payload;
       })
-      .addCase(getUserProfile.rejected, (state, action) => {
+      .addCase(fetchProfile.rejected, (state, action) => {
         state.loginLoading = false;
         state.loginError = action.payload || "Something went wrong";
       });

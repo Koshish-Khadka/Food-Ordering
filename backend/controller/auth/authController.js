@@ -30,6 +30,42 @@ export const loginUser = async (req, res) => {
   res.status(200).json({ message: "Login successful", user, token });
 };
 
+export const adminLogin = async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
+
+  if (user.role !== "admin") {
+    return res.status(403).json({ message: "Admin access only" });
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
+
+  const token = jwt.sign(
+    { userId: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: "11h" }
+  );
+
+  // res.status(200).json({
+  //   token,
+  //   user: {
+  //     id: user._id,
+  //     email: user.email,
+  //     user: user.user,
+  //     role: user.role,
+  //   },
+  // });
+
+  res.status(200).json({ message: "Login successful", user, token });
+};
+
 export const registerUser = async (req, res) => {
   const { email, phoneNumber, password, user } = req.body;
   if (!email || !phoneNumber || !password) {

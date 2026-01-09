@@ -14,7 +14,7 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm<formData>();
-  const { loginError, loginLoading, loginUserData } = useAppSelector(
+  const { loginError, loginLoading, loginUserData, token } = useAppSelector(
     (state) => state.auth
   );
   const navigate = useNavigate();
@@ -23,10 +23,10 @@ export default function Login() {
     dispatch(loginUser(data));
   };
   useEffect(() => {
-    if (loginUserData && loginUserData.role === "admin") {
+    if (loginUserData && token) {
       navigate("/admin", { replace: true });
     }
-  }, [loginUserData, navigate]);
+  }, [loginUserData, token]);
 
   return (
     <main className="mt-20 flex items-center justify-center w-full px-4">

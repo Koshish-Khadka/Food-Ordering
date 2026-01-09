@@ -1,30 +1,11 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { useEffect } from "react";
-import { getUserProfile } from "./store/slice/authSlice";
+import { useAppSelector } from "./store/hooks";
 
 const ProtectedRoute = () => {
-  const dispatch = useAppDispatch();
   const { token, loginUserData } = useAppSelector((state) => state.auth);
 
-  useEffect(() => {
-    if (token && !loginUserData) {
-      dispatch(getUserProfile());
-    }
-  }, [token, loginUserData, dispatch]);
-
-  // Not logged in
-  if (!token) {
-    return <Navigate to="/" replace />;
-  }
-
-  // Waiting for profile
-  if (!loginUserData) {
-    return <p className="p-6">Loading...</p>;
-  }
-
-  // Not admin
-  if (loginUserData.role !== "admin") {
+  // Not admin or not loggedin
+  if (loginUserData?.role !== "admin" || !token) {
     return <Navigate to="/" replace />;
   }
 
