@@ -5,8 +5,11 @@ import {
   Users,
   UserStar,
 } from "lucide-react";
+import { useAppDispatch } from "../../store/hooks";
+import { logout } from "../../store/slice/authSlice";
 
 const AdminLayout = () => {
+  const dispatch = useAppDispatch();
 
   const sidebarLinks = [
     {
@@ -36,7 +39,10 @@ const AdminLayout = () => {
       {/* Top Navbar */}
       <div className="flex items-center justify-between px-4 md:px-8 border-b border-gray-300 py-3 bg-white">
         <p className="font-semibold">Admin Panel</p>
-        <button className="border rounded-full text-sm px-4 py-1">
+        <button
+          className="border rounded-full text-sm px-4 py-1"
+          onClick={() => dispatch(logout())}
+        >
           Logout
         </button>
       </div>

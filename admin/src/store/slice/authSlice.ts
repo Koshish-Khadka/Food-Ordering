@@ -37,10 +37,14 @@ export const loginUser = createAsyncThunk<
   { rejectValue: string }
 >("auth/loginUsers", async (data, thunkAPI) => {
   try {
-    const response = await API.post("/auth/login", data);
+    const response = await API.post("/auth/login/admin", data);
     return response.data;
-  } catch (error) {
-    return thunkAPI.rejectWithValue("Something went wrong");
+  } catch (error: any) {
+    const message =
+      error.response?.data?.message || "Unable to login. Please try again.";
+
+    return thunkAPI.rejectWithValue(message);
+    // return thunkAPI.rejectWithValue("Something went wrong");
   }
 });
 

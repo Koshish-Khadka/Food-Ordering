@@ -23,13 +23,11 @@ export default function Login() {
     dispatch(loginUser(data));
   };
   useEffect(() => {
-    if (!loginError && loginUserData) {
-      navigate("/admin");
+    if (loginUserData && loginUserData.role === "admin") {
+      navigate("/admin", { replace: true });
     }
-    if (loginError) {
-      return alert(loginError);
-    }
-  }, [dispatch, loginUserData]);
+  }, [loginUserData, navigate]);
+
   return (
     <main className="mt-20 flex items-center justify-center w-full px-4">
       <form
@@ -107,12 +105,9 @@ export default function Login() {
         >
           Login
         </button>
-        {/* <p className="text-center py-8">
-          Don't have an account?{" "}
-          <a href="/signup" className="text-indigo-600 hover:underline">
-            Sign up
-          </a>
-        </p> */}
+        {loginError && (
+          <p className="mt-4 text-red-600 text-sm text-center">{loginError}</p>
+        )}
       </form>
     </main>
   );
