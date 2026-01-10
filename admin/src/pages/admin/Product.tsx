@@ -1,26 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchProducts } from "../../store/slice/productSlice";
+import Addproduct from "../../modal/Addproduct";
 
 const Product = () => {
   const dispatch = useAppDispatch();
   const { productData, loading } = useAppSelector((state) => state.product);
   const [selectedvalue, setSelectedValue] = useState("");
   const [input, setInput] = useState("");
+  const [ismodalopen, setIsModalOpen] = useState(false);
+
   useEffect(() => {
     dispatch(fetchProducts());
   }, []);
 
-  //   const filteredUsers = userData.filter((user) => {
-  //     const matchesRole = selectedvalue ? user.role === selectedvalue : true;
-
-  //     const matchesSearch = input
-  //       ? user.email.toLowerCase().includes(input.toLowerCase()) ||
-  //         user.user.toLowerCase().includes(input.toLowerCase())
-  //       : true;
-
-  //     return matchesRole && matchesSearch;
-  //   });
   const filterProduct = productData
     //   filter by status
     .filter((product) => {
@@ -81,6 +74,14 @@ const Product = () => {
               <option value="available">available</option>
               <option value="unavailable">unavailable</option>
             </select>
+          </div>
+          <div>
+            <button
+              className="p-2 rounded-md bg-green-300 border border-gray-200 hover:text-white transition-all duration-150"
+              onClick={() => setIsModalOpen(true)}
+            >
+              Add Product
+            </button>
           </div>
         </div>
       </div>
@@ -183,6 +184,7 @@ const Product = () => {
           </div>
         </div>
       </div>
+      {ismodalopen && <Addproduct onClose={() => setIsModalOpen(false)} />}
     </div>
   );
 };
