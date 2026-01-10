@@ -2,6 +2,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import {
   CalendarArrowUp,
   LayoutDashboard,
+  ShoppingCart,
   Users,
   UserStar,
 } from "lucide-react";
@@ -26,6 +27,11 @@ const AdminLayout = () => {
       name: "Users",
       path: "users",
       icon: <Users className="w-6 h-6" />,
+    },
+    {
+      name: "products",
+      path: "products",
+      icon: <ShoppingCart className="w-6 h-6" />,
     },
     {
       name: "Reviews",

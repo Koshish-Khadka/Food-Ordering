@@ -67,11 +67,11 @@ const Profile = () => {
       </div>
       {/* order table */}
       {orderData.length > 0 && (
-        <div className="bg-white p-8 rounded-md w-full">
+        <div className="bg-white p-8 rounded-md w-full border mt-4 border-gray-100">
           <div className=" flex items-center justify-between pb-6">
             <div>
-              <h2 className="text-gray-600 font-semibold">Products Oder</h2>
-              <span className="text-xs">All products item</span>
+              <h2 className="text-gray-600 font-semibold">Orders</h2>
+              <span className="text-xs">All order history</span>
             </div>
             <div className="flex gap-x-4 items-center justify-between">
               <div className="flex bg-gray-50 items-center p-2 rounded-md border border-gray-200">

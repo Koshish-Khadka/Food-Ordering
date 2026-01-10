@@ -11,7 +11,7 @@ import { Provider } from "react-redux";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { useEffect } from "react";
 import { fetchProfile } from "./store/slice/authSlice";
-import { fetchOrders } from "./store/slice/orderSlice";
+import Product from "./pages/admin/Product";
 const Layout = () => {
   const dispatch = useAppDispatch();
   const { token } = useAppSelector((state) => state.auth);
@@ -19,7 +19,6 @@ const Layout = () => {
   useEffect(() => {
     if (token) {
       dispatch(fetchProfile());
-      dispatch(fetchOrders());
     }
   }, [token, dispatch]);
 
@@ -32,6 +31,7 @@ const Layout = () => {
             <Route index element={<Dashboard />} />
             <Route path="orders" element={<Order />} />
             <Route path="users" element={<Users />} />
+            <Route path="products" element={<Product />} />
             <Route path="reviews" element={<Reviews />} />
           </Route>
         </Route>
