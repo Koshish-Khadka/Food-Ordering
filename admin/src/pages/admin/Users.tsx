@@ -96,12 +96,16 @@ const Users = () => {
               <tbody>
                 {loading ? (
                   <tr>
-                    <p className="p-2 text-center text-xl font-semibold">
+                    <td colSpan={5} className="text-center py-4">
                       Loading...
-                    </p>
+                    </td>
                   </tr>
                 ) : filteredUsers.length === 0 ? (
-                  <p>No result found</p>
+                  <tr>
+                    <td colSpan={5} className="text-center py-4">
+                      No result found
+                    </td>
+                  </tr>
                 ) : (
                   filteredUsers.map((user) => (
                     <tr

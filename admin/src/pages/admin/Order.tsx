@@ -102,7 +102,11 @@ const Order = () => {
               </thead>
               <tbody>
                 {loading ? (
-                  <p>Loading...</p>
+                  <tr>
+                    <td colSpan={5} className="text-center py-4">
+                      Loading...
+                    </td>
+                  </tr>
                 ) : (
                   filteredOrders.map((order) => (
                     <tr
