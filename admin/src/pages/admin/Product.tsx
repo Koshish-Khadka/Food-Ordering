@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchProducts } from "../../store/slice/productSlice";
 import Addproduct from "../../modal/Addproduct";
 
 const Product = () => {
   const dispatch = useAppDispatch();
-  const { productData, loading } = useAppSelector((state) => state.product);
+  const { products, fetchProducts: fetchProductsState } = useAppSelector(
+    (state) => state.product
+  );
+
   const [selectedvalue, setSelectedValue] = useState("");
   const [input, setInput] = useState("");
   const [ismodalopen, setIsModalOpen] = useState(false);
@@ -14,22 +17,17 @@ const Product = () => {
     dispatch(fetchProducts());
   }, []);
 
-  const filterProduct = productData
-    //   filter by status
-    .filter((product) => {
-      const matchedStatus = selectedvalue
-        ? product.productStatus === selectedvalue
-        : true;
+  const filterProduct = products.filter((product) => {
+    const matchedStatus = selectedvalue
+      ? product.productStatus === selectedvalue
+      : true;
 
-      const matchedSearch = input
-        ? product.productName
-            .toLocaleLowerCase()
-            .includes(input.toLocaleLowerCase())
-        : true;
+    const matchedSearch = input
+      ? product.productName.toLowerCase().includes(input.toLowerCase())
+      : true;
 
-      return matchedStatus && matchedSearch;
-    });
-  // filter product by name
+    return matchedStatus && matchedSearch;
+  });
 
   return (
     <div className="bg-white p-8 rounded-md w-full border mt-4 border-gray-100">
@@ -109,7 +107,7 @@ const Product = () => {
                 </tr>
               </thead>
               <tbody>
-                {loading ? (
+                {fetchProductsState.loading ? (
                   <tr>
                     <td colSpan={5} className="text-center py-4">
                       Loading...
@@ -124,7 +122,7 @@ const Product = () => {
                 ) : (
                   filterProduct.map((product) => (
                     <tr
-                      key={product.productName}
+                      key={product._id}
                       className="transition-colors duration-150 hover:bg-gray-600 cursor-pointer"
                       // onClick={() => navigate(`/profile/order/${user._id}`)}
                     >
@@ -149,7 +147,7 @@ const Product = () => {
                       {/* Created At */}
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                         <p className="text-gray-900 whitespace-no-wrap">
-                          {new Date(product.createdAt).toLocaleDateString()}
+                          {new Date(product?.createdAt).toLocaleDateString()}
                         </p>
                       </td>
 

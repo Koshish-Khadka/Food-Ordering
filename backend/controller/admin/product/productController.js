@@ -3,7 +3,8 @@ import fs from "fs";
 
 export const createProduct = async (req, res) => {
   const file = req.file;
-  // console.log(file);
+  console.log("file", file);
+  console.log("data", req.body);
   let filepath;
   if (!file) {
     filepath = null;
@@ -25,7 +26,8 @@ export const createProduct = async (req, res) => {
 
   return res
     .status(200)
-    .json({ message: "product created successfully", Products: product });
+    .json({ message: "product created successfully", data: product });
+  // .json({ message: "product created successfully"});
 };
 
 export const updateProduct = async (req, res) => {

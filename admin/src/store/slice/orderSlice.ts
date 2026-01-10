@@ -49,7 +49,7 @@ export const fetchOrders = createAsyncThunk<
   userOrderType[],
   void,
   { rejectValue: string }
->("checkout/fetchuserOrder", async (_, thunkAPI) => {
+>("order/fetchuserOrder", async (_, thunkAPI) => {
   try {
     const response = await APIAuthenticated.get("/admin");
     return response.data.data;
@@ -59,6 +59,8 @@ export const fetchOrders = createAsyncThunk<
     );
   }
 });
+
+
 
 export const orderSlice = createSlice({
   name: "order",
