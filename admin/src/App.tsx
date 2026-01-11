@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { useEffect } from "react";
 import { fetchProfile } from "./store/slice/authSlice";
 import Product from "./pages/admin/Product";
+import Orderdetail from "./pages/Detailpage/Orderdetail";
 const Layout = () => {
   const dispatch = useAppDispatch();
   const { token } = useAppSelector((state) => state.auth);
@@ -30,6 +31,7 @@ const Layout = () => {
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="orders" element={<Order />} />
+            <Route path="orders/:id" element={<Orderdetail />} />
             <Route path="users" element={<Users />} />
             <Route path="products" element={<Product />} />
             <Route path="reviews" element={<Reviews />} />

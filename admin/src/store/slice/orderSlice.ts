@@ -32,6 +32,7 @@ export type userOrderType = {
   totalAmount: number;
   paymentDetails: {
     method: string;
+    status?: string;
   };
   orderStatus: string;
   createdAt: string;
@@ -49,7 +50,7 @@ export const fetchOrders = createAsyncThunk<
   userOrderType[],
   void,
   { rejectValue: string }
->("order/fetchuserOrder", async (_, thunkAPI) => {
+>("order/fetchOrders", async (_, thunkAPI) => {
   try {
     const response = await APIAuthenticated.get("/admin");
     return response.data.data;
@@ -60,7 +61,20 @@ export const fetchOrders = createAsyncThunk<
   }
 });
 
-
+export const fetchSingleOrder = createAsyncThunk<
+  userOrderType,
+  string,
+  { rejectValue: string }
+>("order/fetchSingleOrder", async (orderId, thunkAPI) => {
+  try {
+    const response = await APIAuthenticated.get(`/admin/${orderId}`);
+    return response.data.data;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || "Order failed"
+    );
+  }
+});
 
 export const orderSlice = createSlice({
   name: "order",

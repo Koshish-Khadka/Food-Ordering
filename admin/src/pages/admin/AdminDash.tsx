@@ -43,7 +43,7 @@ const AdminLayout = () => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Top Navbar */}
-      <div className="fixed top-0 left-0 right-0 z-20 flex items-center justify-between px-4 md:px-8 border-b border-gray-300 py-3 bg-white shadow">
+      <div className="fixed top-0 left-0 right-0 z-20 flex items-center justify-between px-4 md:px-8 border-b border-gray-300 py-3 bg-white shadow"> 
         <p className="font-semibold">Admin Panel</p>
         <button
           className="border rounded-full text-sm px-4 py-1"

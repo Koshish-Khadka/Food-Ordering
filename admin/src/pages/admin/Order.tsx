@@ -29,7 +29,7 @@ const Order = () => {
     //  Remove orders with no matching items
     .filter((order) => order.items.length > 0);
   return (
-    <div className="bg-white p-8 rounded-md w-full border mt-4 border-gray-100">
+    <div className="bg-white p-8 rounded-md w-full border mt-14 border-gray-100">
       <div className=" flex items-center justify-between pb-6">
         <div>
           <h2 className="text-gray-600 font-semibold text-3xl">All Orders</h2>
@@ -112,7 +112,7 @@ const Order = () => {
                     <tr
                       key={order._id}
                       className="transition-colors duration-150 hover:bg-gray-600 cursor-pointer"
-                      onClick={() => navigate(`/profile/order/${order._id}`)}
+                      onClick={() => navigate(`/admin/orders/${order._id}`)}
                     >
                       {/* Product info */}
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
