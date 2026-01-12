@@ -21,7 +21,7 @@ type stateType = {
 };
 
 export type userOrderType = {
-  _id?: string;
+  _id: string;
   user?: string;
   shippingAddress: string;
   phoneNumber: number;
@@ -61,25 +61,31 @@ export const fetchOrders = createAsyncThunk<
   }
 });
 
-export const fetchSingleOrder = createAsyncThunk<
-  userOrderType,
-  string,
-  { rejectValue: string }
->("order/fetchSingleOrder", async (orderId, thunkAPI) => {
-  try {
-    const response = await APIAuthenticated.get(`/admin/${orderId}`);
-    return response.data.data;
-  } catch (error: any) {
-    return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Order failed"
-    );
-  }
-});
+// export const fetchSingleOrder = createAsyncThunk<
+//   userOrderType,
+//   string,
+//   { rejectValue: string }
+// >("order/fetchSingleOrder", async (orderId, thunkAPI) => {
+//   try {
+//     const response = await APIAuthenticated.get(`/admin/${orderId}`);
+//     return response.data.data;
+//   } catch (error: any) {
+//     return thunkAPI.rejectWithValue(
+//       error.response?.data?.message || "Order failed"
+//     );
+//   }
+// });
 
 export const orderSlice = createSlice({
   name: "order",
   initialState,
-  reducers: {},
+  reducers: {
+    removeOrder: (state, action) => {
+      state.orderData = state.orderData.filter(
+        (order) => order._id !== action.payload
+      );
+    },
+  },
   extraReducers: (builder) => {
     builder
       // all order
@@ -103,4 +109,5 @@ export const orderSlice = createSlice({
   },
 });
 
+export const { removeOrder } = orderSlice.actions;
 export default orderSlice.reducer;

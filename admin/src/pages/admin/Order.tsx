@@ -1,13 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { fetchOrders } from "../../store/slice/orderSlice";
+import { fetchOrders, removeOrder } from "../../store/slice/orderSlice";
+import { APIAuthenticated } from "../../http";
+import { useDispatch } from "react-redux";
 
 const Order = () => {
   const [input, setInput] = useState("");
   const [selectedvalue, setSelectedValue] = useState("");
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const Dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchOrders());
   }, [dispatch]);
@@ -28,6 +32,22 @@ const Order = () => {
 
     //  Remove orders with no matching items
     .filter((order) => order.items.length > 0);
+
+  const deleteOrder = async (orderId: string) => {
+    if (!orderId) return;
+    try {
+      const response = await APIAuthenticated.delete(`admin/${orderId}`);
+      if (response.status === 200) {
+        Dispatch(removeOrder(orderId));
+        alert("Order deleted");
+      }
+    } catch (error: any) {
+      const message = error.response.data.messsage;
+      console.log(message);
+      alert(message);
+    }
+  };
+
   return (
     <div className="bg-white p-8 rounded-md w-full border mt-14 border-gray-100">
       <div className=" flex items-center justify-between pb-6">
@@ -98,6 +118,9 @@ const Order = () => {
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Status
                   </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -109,13 +132,12 @@ const Order = () => {
                   </tr>
                 ) : (
                   filteredOrders.map((order) => (
-                    <tr
-                      key={order._id}
-                      className="transition-colors duration-150 hover:bg-gray-600 cursor-pointer"
-                      onClick={() => navigate(`/admin/orders/${order._id}`)}
-                    >
+                    <tr key={order._id} className=" cursor-pointer">
                       {/* Product info */}
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      <td
+                        className="px-5 py-5 border-b border-gray-200 bg-white text-sm"
+                        onClick={() => navigate(`/admin/orders/${order._id}`)}
+                      >
                         <div className="flex items-center">
                           <div className="ml-3">
                             <p className="text-blue-900 underline whitespace-no-wrap">
@@ -163,6 +185,14 @@ const Order = () => {
                           ></span>
                           <span className="relative">{order.orderStatus}</span>
                         </span>
+                      </td>
+                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <button
+                          className="border p-2 border-gray-200 bg-red-500 text-white rounded-md transition-all duration-150 ease-in-out hover:scale-105"
+                          onClick={() => deleteOrder(order._id)}
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   ))

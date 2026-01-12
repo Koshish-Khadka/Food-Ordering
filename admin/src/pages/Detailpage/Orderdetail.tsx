@@ -15,12 +15,10 @@ const Orderdetail = () => {
       dispatch(fetchOrders());
     }
   }, [dispatch, orderData.length]);
-  console.log("all orders", orderData);
 
   //   const [data] = orderData.filter((item) => item._id === orderId);
   const data = orderData.find((item) => item._id === id);
   const navigate = useNavigate();
-  console.log("data", data);
 
   if (loading || !data) {
     return <p className="text-center mt-20">Loading order...</p>;
@@ -191,6 +189,21 @@ const Orderdetail = () => {
                   <p className="w-48 lg:w-full xl:w-48 text-center md:text-left text-sm leading-5 text-gray-600">
                     {data.orderStatus}
                   </p>
+                  <div>
+                    <label htmlFor="filer">Edit Status : </label>
+                    <select
+                      title="filter"
+                      name="filter"
+                      id="filter"
+                      className="p-2 rounded-md bg-gray-50 border border-gray-200"
+                      //   onChange={(e) => setSelectedValue(e.target.value)}
+                    >
+                      <option value="">Choose</option>
+                      <option value="delivered">delivered</option>
+                      <option value="ontheway">ontheway</option>
+                      <option value="preparation">preparation</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
