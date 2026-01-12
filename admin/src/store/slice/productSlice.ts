@@ -76,6 +76,11 @@ export const productSlice = createSlice({
     resetAddProductState: (state) => {
       state.addProduct = { ...initialAsyncState };
     },
+    removeProduct: (state, action) => {
+      state.products = state.products.filter(
+        (product) => product._id !== action.payload
+      );
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -115,5 +120,5 @@ export const productSlice = createSlice({
   },
 });
 
-export const { resetAddProductState } = productSlice.actions;
+export const { resetAddProductState, removeProduct } = productSlice.actions;
 export default productSlice.reducer;

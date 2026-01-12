@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { APIAuthenticated } from "../../http";
 import { fetchOrders } from "../../store/slice/orderSlice";
 
@@ -9,6 +9,7 @@ const Orderdetail = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const { orderData, loading } = useAppSelector((state) => state.order);
+
   //   const [ismodelopen, setIsModalOpen] = useState(false);
   useEffect(() => {
     if (!orderData.length) {
@@ -19,6 +20,15 @@ const Orderdetail = () => {
   //   const [data] = orderData.filter((item) => item._id === orderId);
   const data = orderData.find((item) => item._id === id);
   const navigate = useNavigate();
+  const [orderStatus, setOrderStatus] = useState(data?.orderStatus);
+
+  const ORDER_STATUSES = [
+    "pending",
+    "preparation",
+    "ontheway",
+    "delivered",
+    "cancelled",
+  ];
 
   const cancelOrder = async (orderId?: string) => {
     if (!orderId) return;
@@ -37,6 +47,7 @@ const Orderdetail = () => {
   };
 
   const updateOrderStatus = async (status: string) => {
+    setOrderStatus(status);
     try {
       const response = await APIAuthenticated.patch(`/admin/${id}`, {
         orderStatus: status,
@@ -204,18 +215,17 @@ const Orderdetail = () => {
                   <div>
                     <label htmlFor="filer">Edit Status : </label>
                     <select
-                      title="filter"
-                      name="filter"
-                      id="filter"
+                      title="status"
+                      value={orderStatus}
+                   onChange={(e) => updateOrderStatus(e.target.value)}
+
                       className="p-2 rounded-md bg-gray-50 border border-gray-200"
-                      onChange={(e) => updateOrderStatus(e.target.value)}
                     >
-                      <option value={data?.orderStatus}>
-                        {data?.orderStatus}
-                      </option>
-                      <option value="delivered">delivered</option>
-                      <option value="ontheway">ontheway</option>
-                      <option value="preparation">preparation</option>
+                      {ORDER_STATUSES.map((status) => (
+                        <option key={status} value={status}>
+                          {status}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>

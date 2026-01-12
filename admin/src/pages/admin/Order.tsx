@@ -173,7 +173,7 @@ const Order = () => {
                         <span className="relative inline-block px-3 py-1 font-semibold text-yellow-900 leading-tight">
                           <span
                             aria-hidden
-                            className={`absolute inset-0 opacity-50 rounded-full ${
+                            className={`absolute inset-0 rounded-full ${
                               order.orderStatus === "pending"
                                 ? "bg-yellow-500"
                                 : order.orderStatus === "cancelled"
@@ -183,7 +183,7 @@ const Order = () => {
                                 : "bg-blue-500"
                             }`}
                           ></span>
-                          <span className="relative">{order.orderStatus}</span>
+                          <span className="relative text-white">{order.orderStatus}</span>
                         </span>
                       </td>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">

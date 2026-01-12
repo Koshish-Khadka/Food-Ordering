@@ -1,13 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { fetchProducts } from "../../store/slice/productSlice";
+import { fetchProducts, removeProduct } from "../../store/slice/productSlice";
 import Addproduct from "../../modal/Addproduct";
+import { APIAuthenticated } from "../../http";
+import { useDispatch } from "react-redux";
 
 const Product = () => {
   const dispatch = useAppDispatch();
   const { products, fetchProducts: fetchProductsState } = useAppSelector(
     (state) => state.product
   );
+  const Dispatch = useDispatch();
 
   const [selectedvalue, setSelectedValue] = useState("");
   const [input, setInput] = useState("");
@@ -28,6 +32,21 @@ const Product = () => {
 
     return matchedStatus && matchedSearch;
   });
+
+  const deleteProduct = async (productId: string) => {
+    if (!productId) return;
+    try {
+      const response = await APIAuthenticated.delete(`/products/${productId}`);
+      if (response.status === 200) {
+        Dispatch(removeProduct(productId));
+        alert("Product Deleted");
+      }
+    } catch (error: any) {
+      const message = error.response.message;
+      console.log(message);
+      alert(message);
+    }
+  };
 
   return (
     <div className="bg-white p-8 rounded-md w-full border mt-14 border-gray-100">
@@ -104,6 +123,9 @@ const Product = () => {
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Status
                   </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Action
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -123,7 +145,7 @@ const Product = () => {
                   filterProduct.map((product) => (
                     <tr
                       key={product._id}
-                      className="transition-colors duration-150 hover:bg-gray-600 cursor-pointer"
+                      className="cursor-pointer"
                       // onClick={() => navigate(`/profile/order/${user._id}`)}
                     >
                       {/* Product info */}
@@ -163,16 +185,24 @@ const Product = () => {
                         <span className="relative inline-block px-3 py-1 font-semibold text-black leading-tight">
                           <span
                             aria-hidden
-                            className={`absolute inset-0 opacity-50 rounded-full ${
+                            className={`absolute inset-0  rounded-full ${
                               product.productStatus === "available"
                                 ? `bg-green-500`
                                 : `bg-red-500`
                             }`}
                           ></span>
-                          <span className="relative">
+                          <span className="relative text-white">
                             {product.productStatus}
                           </span>
                         </span>
+                      </td>
+                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <button
+                          className="border border-gray-200 bg-red-500 rounded-md p-2 font-medium text-white transition-all duration-100 ease-in-out hover:scale-110"
+                          onClick={() => deleteProduct(product._id)}
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   ))

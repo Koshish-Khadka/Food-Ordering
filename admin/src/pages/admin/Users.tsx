@@ -150,13 +150,13 @@ const Users = () => {
                         <span className="relative inline-block px-3 py-1 font-semibold text-black leading-tight">
                           <span
                             aria-hidden
-                            className={`absolute inset-0 opacity-50 rounded-full ${
+                            className={`absolute inset-0 rounded-full ${
                               user.role === "admin"
                                 ? "bg-yellow-500"
                                 : "bg-green-500"
                             }`}
                           ></span>
-                          <span className="relative">{user.role}</span>
+                          <span className="relative text-white">{user.role}</span>
                         </span>
                       </td>
                     </tr>
