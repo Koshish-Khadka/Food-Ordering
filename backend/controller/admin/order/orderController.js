@@ -43,6 +43,8 @@ export const deleteOrderById = async (req, res) => {
 export const updateOrderStatus = async (req, res) => {
   const orderId = req.params.id;
   const { orderStatus } = req.body;
+  console.log("orderID", orderId);
+  console.log("status", orderStatus);
   if (
     !orderStatus ||
     !["pending", "delivered", "cancelled", "ontheway", "preparation"].includes(

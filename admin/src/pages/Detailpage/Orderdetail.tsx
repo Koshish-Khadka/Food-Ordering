@@ -20,10 +20,6 @@ const Orderdetail = () => {
   const data = orderData.find((item) => item._id === id);
   const navigate = useNavigate();
 
-  if (loading || !data) {
-    return <p className="text-center mt-20">Loading order...</p>;
-  }
-
   const cancelOrder = async (orderId?: string) => {
     if (!orderId) return;
     try {
@@ -40,20 +36,33 @@ const Orderdetail = () => {
     }
   };
 
-  const deleteOrder = async (orderId?: string) => {
+  const updateOrderStatus = async (status: string) => {
     try {
-      const response = await APIAuthenticated.delete(`order/${orderId}`);
+      const response = await APIAuthenticated.patch(`/admin/${id}`, {
+        orderStatus: status,
+      });
+
       alert(response.data.message);
       dispatch(fetchOrders());
-      navigate("/profile");
     } catch (error: any) {
-      if (error.response) {
-        alert(error.response.message);
-      } else {
-        alert("Something went wrong");
-      }
+      alert(error.response?.data?.message || "Failed to update order status");
     }
   };
+
+  // const deleteOrder = async (orderId?: string) => {
+  //   try {
+  //     const response = await APIAuthenticated.delete(`order/${orderId}`);
+  //     alert(response.data.message);
+  //     dispatch(fetchOrders());
+  //     navigate("/profile");
+  //   } catch (error: any) {
+  //     if (error.response) {
+  //       alert(error.response.message);
+  //     } else {
+  //       alert("Something went wrong");
+  //     }
+  //   }
+  // };
 
   // const updateOrder = async (orderId?: string) => {
   //   try {
@@ -66,6 +75,9 @@ const Orderdetail = () => {
   //     }
   //   }
   // };
+  if (loading || !data) {
+    return <p className="text-center mt-20">Loading order...</p>;
+  }
 
   return (
     <div className="py-14 px-4 md:px-6 2xl:px-20 2xl:container 2xl:mx-auto">
@@ -196,9 +208,11 @@ const Orderdetail = () => {
                       name="filter"
                       id="filter"
                       className="p-2 rounded-md bg-gray-50 border border-gray-200"
-                      //   onChange={(e) => setSelectedValue(e.target.value)}
+                      onChange={(e) => updateOrderStatus(e.target.value)}
                     >
-                      <option value="">Choose</option>
+                      <option value={data?.orderStatus}>
+                        {data?.orderStatus}
+                      </option>
                       <option value="delivered">delivered</option>
                       <option value="ontheway">ontheway</option>
                       <option value="preparation">preparation</option>
@@ -223,14 +237,14 @@ const Orderdetail = () => {
                 </button>
 
                 {/* Delete Order */}
-                <button
+                {/* <button
                   className="w-full py-3 rounded-md bg-red-600 text-white text-sm font-semibold
                hover:bg-red-700 transition-all
                focus:ring-2 focus:ring-red-500"
                   onClick={() => deleteOrder(data._id)}
                 >
                   Delete Order
-                </button>
+                </button> */}
 
                 {/* Edit Order */}
                 <button
