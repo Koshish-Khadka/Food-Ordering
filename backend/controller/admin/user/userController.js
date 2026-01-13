@@ -19,8 +19,9 @@ export const getUser = async (req, res) => {
 };
 
 export const deleteUser = async (req, res) => {
-  const { userID } = req.body;
-  console.log("userID", userID);
+  // const { userID } = req.body;
+  // console.log("userID", userID);
+  const { userID } = req.params.id;
   if (!userID) {
     return res.status(505).json({ message: "UserID not provided" });
   }

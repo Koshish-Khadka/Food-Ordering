@@ -15,7 +15,7 @@ router.get(
   catchAsync(getUser)
 );
 router.delete(
-  "/users",
+  "/users/:userID",
   isAuthenticated,
   isValidRole("admin"),
   catchAsync(deleteUser)

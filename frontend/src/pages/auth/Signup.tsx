@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { registerUser } from "../../store/authSlice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useNavigate } from "react-router-dom";
@@ -25,14 +25,14 @@ const Signup = () => {
     dispatch(registerUser(input));
   };
 
-  useEffect(() => {
-    if (!error) {
-      alert("User registered successfully");
-      navigate("/login");
-    } else {
-      alert("Failed to register user");
-    }
-  }, [error, navigate, dispatch]);
+  // useEffect(() => {
+  //   if (!error) {
+  //     alert("User registered successfully");
+  //     navigate("/login");
+  //   } else {
+  //     alert("Failed to register user");
+  //   }
+  // }, [error, navigate, dispatch]);
 
   if (token) {
     navigate("/");
@@ -115,11 +115,11 @@ const Signup = () => {
           )}
 
           {/* Success message */}
-          {!error && (
+          {/* {!error &&  (
             <p className="text-green-500 text-sm mt-2 text-center">
               Registration successful!
             </p>
-          )}
+          )} */}
         </form>
 
         <div className="mt-4 text-center text-sm text-gray-600 space-y-2">

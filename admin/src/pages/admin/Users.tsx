@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchUsers } from "../../store/slice/userSlice";
+import { APIAuthenticated } from "../../http";
 
 const Users = () => {
   const dispatch = useAppDispatch();
@@ -23,6 +25,19 @@ const Users = () => {
 
     return matchesRole && matchesSearch;
   });
+
+  const deleteUser = async (userId: string) => {
+    if (userId) return;
+    try {
+      const response = await APIAuthenticated.delete(`/admin/users/${userId}`);
+      if (response.status === 200) {
+        alert("User Deleted");
+      }
+    } catch (error: any) {
+      const message = error.response.message;
+      console.log(message);
+    }
+  };
 
   return (
     <div className="bg-white p-8 rounded-md w-full border mt-14 border-gray-100">
@@ -91,6 +106,9 @@ const Users = () => {
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Role
                   </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Action
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -110,7 +128,7 @@ const Users = () => {
                   filteredUsers.map((user) => (
                     <tr
                       key={user._id}
-                      className="transition-colors duration-150 hover:bg-gray-600 cursor-pointer"
+                      className=" cursor-pointer"
                       // onClick={() => navigate(`/profile/order/${user._id}`)}
                     >
                       {/* Product info */}
@@ -156,8 +174,18 @@ const Users = () => {
                                 : "bg-green-500"
                             }`}
                           ></span>
-                          <span className="relative text-white">{user.role}</span>
+                          <span className="relative text-white">
+                            {user.role}
+                          </span>
                         </span>
+                      </td>
+                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <button
+                          className="p-2 border border-gray-200 bg-red-500 rounded-md font-medium text-white transition-all duration-150 ease-in-outF hover:scale-110 "
+                          onClick={() => deleteUser(user._id)}
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   ))
