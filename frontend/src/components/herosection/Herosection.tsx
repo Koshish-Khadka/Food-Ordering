@@ -7,7 +7,7 @@ const Herosection = () => {
   const { data } = useAppSelector((state) => state.product);
 
   const searchProduct = data.filter((item) =>
-    item.productName.toLowerCase().includes(input.toLowerCase())
+    item.productName.toLowerCase().includes(input.toLowerCase()),
   );
   // console.log(searchProduct);
   return (
@@ -23,10 +23,10 @@ const Herosection = () => {
 
       {/* Hero content (optional) */}
       <div className="relative z-10 flex flex-col h-full items-center justify-center text-white">
-        <h1 className="text-4xl font-normal ">
+        <h1 className="text-xl md:text-4xl md:font-medium font-normal ">
           From kitchens near you to your table.
         </h1>
-        <div className="mt-6 flex w-full max-w-xl">
+        <div className="mt-6 hidden md:flex w-full max-w-xl">
           <input
             placeholder="Cusine / Restaurant / Dish"
             type="text"
