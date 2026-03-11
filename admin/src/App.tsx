@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { fetchProfile } from "./store/slice/authSlice";
 import Product from "./pages/admin/Product";
 import Orderdetail from "./pages/Detailpage/Orderdetail";
+import Task from "./pages/Task";
 const Layout = () => {
   const dispatch = useAppDispatch();
   const { token } = useAppSelector((state) => state.auth);
@@ -35,6 +36,7 @@ const Layout = () => {
             <Route path="users" element={<Users />} />
             <Route path="products" element={<Product />} />
             <Route path="reviews" element={<Reviews />} />
+            <Route path="task" element={<Task />} />
           </Route>
         </Route>
       </Routes>

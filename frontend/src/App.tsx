@@ -53,6 +53,7 @@ const Layout = () => {
         <Route path="/order/checkout" element={<Checkout />} />
         <Route path="/success" element={<Khaltisuccess />} />
         <Route path="/profile" element={<Profile />} />
+        {/* <Route path="/task" element={<Task />} /> */}
         <Route path="/profile/order/:orderId" element={<OrderDetail />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/admin" element={<Admin />} />

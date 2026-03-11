@@ -1,9 +1,9 @@
-
 import { configureStore } from "@reduxjs/toolkit";
 import cartReducer from "./cartSlice";
 import productReducer from "./productSlice";
 import authReducer from "./authSlice";
 import checkoutReducer from "./checkoutSlice";
+import taskReducer from "./taskSlice";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +11,7 @@ export const store = configureStore({
     product: productReducer,
     auth: authReducer,
     checkout: checkoutReducer,
+    task: taskReducer,
   },
 });
 
