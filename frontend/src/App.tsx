@@ -17,7 +17,8 @@ import Profile from "./components/profile/Profile";
 import OrderDetail from "./components/profile/OrderDetail";
 import { getUserProfile } from "./store/authSlice";
 import ProtectedRoute from "./pages/ProtectedRoute";
-import Admin from "./pages/Admin";
+import Task from "./pages/Task";
+import Dashboard from "./pages/admin/dashboard/Dashboard";
 
 const Layout = () => {
   const location = useLocation();
@@ -53,10 +54,10 @@ const Layout = () => {
         <Route path="/order/checkout" element={<Checkout />} />
         <Route path="/success" element={<Khaltisuccess />} />
         <Route path="/profile" element={<Profile />} />
-        {/* <Route path="/task" element={<Task />} /> */}
+        <Route path="/task" element={<Task />} />
         <Route path="/profile/order/:orderId" element={<OrderDetail />} />
         <Route element={<ProtectedRoute />}>
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin" element={<Dashboard />} />
         </Route>
       </Routes>
     </>

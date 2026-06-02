@@ -57,16 +57,17 @@ const ProductDetail = () => {
 
   return (
     <div className="pt-20">
-      <div className=" max-w-6xl m-auto ">
+      <div className="px-4 md:max-w-6xl m-auto ">
         {/* Image container */}
-        <div className="flex flex-col md:flex-row gap-x-6">
-          <div className="md:w-1/2 shrink-0 w-full h-64 md:h-96 flex items-center justify-center">
-            <img
-              src={selectedProduct?.productImage}
-              alt="Product Image"
-              className="w-full h-full object-cover rounded-lg"
-            />
-          </div>
+        {/* <div className="flex flex-col md:flex-row gap-x-6"> */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+          {/* <div className="md:w-full shrink-0 w-full h-64 md:h-96 flex items-center justify-center"> */}
+          <img
+            src={selectedProduct?.productImage}
+            alt="Product Image"
+            className="w-full h-72 md:h-full object-cover rounded-lg"
+          />
+          {/* </div> */}
           {/* Description container */}
           <div className="w-full p-4">
             <h2 className="text-lg font-medium text-justify">

@@ -32,6 +32,7 @@ const Navbar = () => {
     };
   }, [onscroll]);
 
+
   return (
     <nav
       className={`fixed top-0 left-0 z-50 w-full transition-all duration-300 ease-in-out
@@ -56,11 +57,11 @@ const Navbar = () => {
         {/* Right Section */}
         <div className="flex items-center gap-3 w-full justify-end">
           {/* Search Icon */}
-          {!searchButton && (
+          {searchButton && (
             <button
               title="search"
               onClick={() => setSearchButton(true)}
-              className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-medium text-white sm:text-base transition-all hover:scale-105 duration-150 ease-in-out"
+              className={`${searchButton ? "hidden" : "block"} rounded-xl bg-amber-500 px-4 py-2 text-sm font-medium text-white sm:text-base transition-all hover:scale-105 duration-150 ease-in-out`}
             >
               <Search className="h-6 w-6" color="white" />
             </button>
